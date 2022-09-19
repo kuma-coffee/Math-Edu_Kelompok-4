@@ -1,4 +1,4 @@
-# Math's Edu fot Junior High School
+# Math's Edu for Junior High School
 # Aplikasi Belajar Matematika untuk Sekolah Menengah Pertama (SMP) 
 
 Project fluuter ini bertujuan untuk memnuhi tugas mata kuliah Pemrograman Mobile
