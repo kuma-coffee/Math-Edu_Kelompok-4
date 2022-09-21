@@ -1,6 +1,6 @@
 {
-    "name": "math_edu",
-    "short_name": "math_edu",
+    "name": "maths_edu",
+    "short_name": "maths_edu",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
