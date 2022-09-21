@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:maths_edu/screens/components/body.dart';
-import 'package:maths_edu/screens/homePage/home_page.dart';
+import 'package:maths_edu/screens/loginPage/login_page.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -21,7 +20,7 @@ class SplashScreen extends StatelessWidget {
           ]),
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       //const Color(0xFFFF800B),
-      nextScreen: Body(),
+      nextScreen: LoginPage(),
       splashIconSize: 300,
       duration: 2000,
       splashTransition: SplashTransition.fadeTransition,
