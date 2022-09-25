@@ -4,13 +4,11 @@ import 'package:maths_edu/components/have_an_account_check.dart';
 import 'package:maths_edu/components/rounded_button.dart';
 import 'package:maths_edu/components/rounded_input_field.dart';
 import 'package:maths_edu/components/rounded_password_field.dart';
-import 'package:maths_edu/constants.dart';
 import 'package:maths_edu/screens/components/background.dart';
 import 'package:maths_edu/screens/components/or_divider.dart';
 import 'package:maths_edu/screens/components/social_icon.dart';
 import 'package:maths_edu/screens/homePage/home_page.dart';
 import 'package:maths_edu/screens/loginPage/login_page.dart';
-import 'package:maths_edu/screens/splash_screen.dart';
 
 class Body extends StatelessWidget {
   final Widget child;

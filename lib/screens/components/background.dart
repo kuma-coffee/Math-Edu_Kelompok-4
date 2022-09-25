@@ -13,7 +13,12 @@ class Background extends StatelessWidget {
     return Container(
       height: size.height,
       width: double.infinity,
-      color: Color.fromRGBO(255, 159, 69, 1),
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/images/sec-background.png"),
+          fit: BoxFit.cover,
+        ),
+      ),
       alignment: Alignment.center,
       child: Stack(
         alignment: Alignment.center,
