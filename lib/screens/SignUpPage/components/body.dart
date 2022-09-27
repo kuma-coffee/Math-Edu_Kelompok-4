@@ -4,10 +4,10 @@ import 'package:maths_edu/components/have_an_account_check.dart';
 import 'package:maths_edu/components/rounded_button.dart';
 import 'package:maths_edu/components/rounded_input_field.dart';
 import 'package:maths_edu/components/rounded_password_field.dart';
+import 'package:maths_edu/main/dashboard/dashboard.dart';
 import 'package:maths_edu/screens/components/background.dart';
 import 'package:maths_edu/screens/components/or_divider.dart';
 import 'package:maths_edu/screens/components/social_icon.dart';
-import 'package:maths_edu/screens/homePage/home_page.dart';
 import 'package:maths_edu/screens/loginPage/login_page.dart';
 
 class Body extends StatelessWidget {
@@ -72,9 +72,7 @@ class Body extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
-                    return MyHomePage(
-                      title: 'Maths Edu',
-                    );
+                    return TabBarDemo();
                   }),
                 );
               },
