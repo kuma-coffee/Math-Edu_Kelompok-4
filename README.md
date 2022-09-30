@@ -1,4 +1,4 @@
-# Math's Edu for Junior High School
+# Math Edu for Junior High School
 # Aplikasi Belajar Matematika untuk Sekolah Menengah Pertama (SMP) 
 
 Project flutter ini bertujuan untuk memnuhi tugas mata kuliah Pemrograman Mobile
