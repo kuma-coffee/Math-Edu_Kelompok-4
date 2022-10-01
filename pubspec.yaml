@@ -41,6 +41,7 @@ dependencies:
   cloud_firestore: ^3.5.0
   provider: ^6.0.3
   firebase_core: ^1.24.0
+  email_validator: ^2.1.17
 
 flutter_native_splash:
   android: true

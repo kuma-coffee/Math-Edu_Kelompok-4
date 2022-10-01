@@ -1,14 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:ffi';
-import 'dart:math';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:maths_edu/constants.dart';
+import 'package:maths_edu/main.dart';
 import 'package:maths_edu/screens/SignUpPage/sign_up_page.dart';
 import 'package:maths_edu/services/auth.dart';
+import 'package:maths_edu/services/utils.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -205,8 +204,10 @@ class _SignInPageState extends State<SignInPage> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
       print(e);
+
+      Utils.showSnackBar(e.message);
     }
 
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
