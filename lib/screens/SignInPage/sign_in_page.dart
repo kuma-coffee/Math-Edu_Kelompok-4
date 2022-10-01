@@ -1,31 +1,32 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:maths_edu/constants.dart';
-import 'package:maths_edu/screens/SignInPage/sign_in_page.dart';
-import 'package:maths_edu/screens/components/or_divider.dart';
+import 'package:maths_edu/screens/SignUpPage/sign_up_page.dart';
 import 'package:maths_edu/services/auth.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+class SignInPage extends StatefulWidget {
+  const SignInPage({super.key});
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<SignInPage> createState() => _SignInPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _SignInPageState extends State<SignInPage> {
   String? errorMessage = '';
   //bool isLogin = true;
 
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
 
-  // import SIGN UP
-  Future<void> createUserWithEmailAndPassword() async {
+  // import SIGN IN
+  Future<void> signInWithEmailAndPassword() async {
     try {
-      await Auth().createUserWithEmailAndPassword(
+      await Auth().signInWithEmailAndPassword(
         email: _controllerEmail.text,
         password: _controllerPassword.text,
       );
@@ -46,14 +47,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    List socialImg = [
-      'facebook.png',
-      'google.png',
-      'twitter.png',
-    ];
-
     Size size = MediaQuery.of(context).size;
-
     return Scaffold(
       body: Container(
         height: size.height,
@@ -83,11 +77,10 @@ class _SignUpPageState extends State<SignUpPage> {
                 height: size.height * 0.05,
               ),
 
-              //Login Text
               Column(
                 children: [
                   Text(
-                    'SIGN UP',
+                    'LOGIN',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 36,
@@ -97,7 +90,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     height: size.height * 0.01,
                   ),
                   Text(
-                    'Create an account',
+                    'Login to your account',
                     style: TextStyle(fontSize: 18),
                   ),
                   SizedBox(
@@ -119,7 +112,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     //Email textfield
                     TextField(
                       controller: _controllerEmail,
-                      //onChanged: (value) => setState(() => value),
                       onChanged: (value) {},
                       decoration: InputDecoration(
                           icon: Icon(
@@ -148,9 +140,8 @@ class _SignUpPageState extends State<SignUpPage> {
                   children: [
                     //Password textfield
                     TextField(
-                      controller: _controllerPassword,
                       onChanged: (value) {},
-                      //onChanged: (value) => setState(() => value),
+                      controller: _controllerPassword,
                       obscureText: true,
                       decoration: InputDecoration(
                         hintText: "Password",
@@ -165,16 +156,16 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ),
 
-              //error message
+              // error message
               _errorMessage(),
 
-              //Sign Up button
+              //Sign In button
               Container(
                 margin: EdgeInsets.symmetric(vertical: 10),
                 width: size.width * 0.8,
                 child: ElevatedButton(
                   onPressed: () async {
-                    await createUserWithEmailAndPassword();
+                    await signInWithEmailAndPassword();
                   },
                   child: Text(
                     'SIGN IN',
@@ -202,13 +193,13 @@ class _SignUpPageState extends State<SignUpPage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) {
-                            return SignInPage();
+                            return SignUpPage();
                           },
                         ),
                       );
                     },
                     child: Text(
-                      'Sign In',
+                      'Sign Up',
                       style: TextStyle(
                         color: kPrimaryColor,
                         fontWeight: FontWeight.bold,
@@ -217,34 +208,6 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                 ],
               ),
-              SizedBox(
-                height: size.height * 0.01,
-              ),
-
-              //Or divider
-              OrDivider(),
-
-              //Sign Up with another way
-              Wrap(
-                children: List<Widget>.generate(
-                  3,
-                  (index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CircleAvatar(
-                        radius: 28,
-                        backgroundColor: kPrimaryColor,
-                        child: CircleAvatar(
-                          radius: 25,
-                          backgroundColor: Colors.white,
-                          backgroundImage:
-                              AssetImage('assets/icons/' + socialImg[index]),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              )
             ],
           ),
         ),
@@ -252,116 +215,3 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 }
-
-
-
-
-
-// class SignUpPage extends StatelessWidget {
-//   SignUpPage({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     Size size = MediaQuery.of(context).size;
-//     return Scaffold(
-//       body: Background(
-//         child: SingleChildScrollView(
-//           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: <Widget>[
-//               //Logo
-//               Image.asset(
-//                 'assets/images/launch_image.png',
-//                 height: size.height * 0.2,
-//               ),
-//               SizedBox(
-//                 height: size.height * 0.05,
-//               ),
-
-//               //Login Text
-//               Text(
-//                 'SIGN UP',
-//                 style: TextStyle(
-//                   fontWeight: FontWeight.bold,
-//                   fontSize: 36,
-//                 ),
-//               ),
-//               SizedBox(
-//                 height: size.height * 0.01,
-//               ),
-
-//               Text(
-//                 'Create an account',
-//                 style: TextStyle(fontSize: 18),
-//               ),
-//               SizedBox(
-//                 height: size.height * 0.05,
-//               ),
-
-//               //Email textfield
-//               RoundedInputField(
-//                 hintText: 'Email',
-//                 onChanged: (value) {},
-//               ),
-
-//               //Password textfield
-//               RoundedPasswordField(
-//                 onChanged: (value) {},
-//               ),
-
-//               //Sign Up button
-//               RoundedButton(
-//                 text: 'SIGN UP',
-//                 press: () {
-//                   // Navigator.push(
-//                   //   context,
-//                   //   MaterialPageRoute(builder: (context) {
-//                   //     return TabBarDemo();
-//                   //   }),
-//                   // );
-//                 },
-//               ),
-
-//               //Don't have an Account? Sign Up
-//               HaveAnAccountCheck(
-//                 login: false,
-//                 tap: () {
-//                   Navigator.push(
-//                     context,
-//                     MaterialPageRoute(
-//                       builder: (context) {
-//                         return LoginPage();
-//                       },
-//                     ),
-//                   );
-//                 },
-//               ),
-
-//               //Or divider
-//               OrDivider(),
-
-//               //Sign Up with another way
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 children: <Widget>[
-//                   SocialIcon(
-//                     iconSrc: FontAwesomeIcons.google,
-//                     tap: () {},
-//                   ),
-//                   SocialIcon(
-//                     iconSrc: FontAwesomeIcons.facebookF,
-//                     tap: () {},
-//                   ),
-//                   SocialIcon(
-//                     iconSrc: FontAwesomeIcons.twitter,
-//                     tap: () {},
-//                   ),
-//                 ],
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

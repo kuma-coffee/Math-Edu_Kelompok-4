@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 
 class OrDivider extends StatelessWidget {
@@ -15,7 +17,7 @@ class OrDivider extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Text(
-              'OR',
+              'Or Sign Up',
               style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.w500,
