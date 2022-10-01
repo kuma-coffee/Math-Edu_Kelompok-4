@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,37 +18,20 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-  String? errorMessage = '';
-  //bool isLogin = true;
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
-  final TextEditingController _controllerEmail = TextEditingController();
-  final TextEditingController _controllerPassword = TextEditingController();
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
 
-  // import SIGN IN
-  Future<void> signInWithEmailAndPassword() async {
-    try {
-      await Auth().signInWithEmailAndPassword(
-        email: _controllerEmail.text,
-        password: _controllerPassword.text,
-      );
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = e.message;
-      });
-    }
-  }
-
-  // error message
-  Widget _errorMessage() {
-    return Text(
-      errorMessage == '' ? '' : 'Your email or password is wrong',
-      style: TextStyle(color: Colors.red),
-    );
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    var size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
         height: size.height,
@@ -111,7 +95,7 @@ class _SignInPageState extends State<SignInPage> {
                   children: [
                     //Email textfield
                     TextField(
-                      controller: _controllerEmail,
+                      controller: emailController,
                       onChanged: (value) {},
                       decoration: InputDecoration(
                           icon: Icon(
@@ -141,7 +125,7 @@ class _SignInPageState extends State<SignInPage> {
                     //Password textfield
                     TextField(
                       onChanged: (value) {},
-                      controller: _controllerPassword,
+                      controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         hintText: "Password",
@@ -156,17 +140,12 @@ class _SignInPageState extends State<SignInPage> {
                 ),
               ),
 
-              // error message
-              _errorMessage(),
-
               //Sign In button
               Container(
                 margin: EdgeInsets.symmetric(vertical: 10),
                 width: size.width * 0.8,
                 child: ElevatedButton(
-                  onPressed: () async {
-                    await signInWithEmailAndPassword();
-                  },
+                  onPressed: signIn,
                   child: Text(
                     'SIGN IN',
                     style: TextStyle(color: Colors.white),
@@ -213,5 +192,23 @@ class _SignInPageState extends State<SignInPage> {
         ),
       ),
     );
+  }
+
+  // SIGN IN
+  Future signIn() async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Center(child: CircularProgressIndicator()));
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+    } catch (e) {
+      print(e);
+    }
+
+    navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 }
