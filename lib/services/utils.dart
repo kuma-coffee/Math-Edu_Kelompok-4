@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:maths_edu/screens/components/background.dart';
 
 class Utils {
   static final messengerKey = GlobalKey<ScaffoldMessengerState>();
