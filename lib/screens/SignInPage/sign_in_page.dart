@@ -63,7 +63,7 @@ class _SignInPageState extends State<SignInPage> {
               Column(
                 children: [
                   Text(
-                    'LOGIN',
+                    'SIGN IN',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 36,
@@ -73,7 +73,7 @@ class _SignInPageState extends State<SignInPage> {
                     height: size.height * 0.01,
                   ),
                   Text(
-                    'Login to your account',
+                    'Sign in to your account',
                     style: TextStyle(fontSize: 18),
                   ),
                   SizedBox(
