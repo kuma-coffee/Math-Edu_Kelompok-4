@@ -6,8 +6,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:maths_edu/constants.dart';
 import 'package:maths_edu/main.dart';
 import 'package:maths_edu/screens/SignUpPage/sign_up_page.dart';
+import 'package:maths_edu/screens/components/or_divider.dart';
 import 'package:maths_edu/services/auth.dart';
 import 'package:maths_edu/services/utils.dart';
+import 'package:provider/provider.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -87,8 +89,9 @@ class _SignInPageState extends State<SignInPage> {
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                 width: size.width * 0.8,
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 240, 239, 239),
+                  //color: Color.fromARGB(255, 240, 239, 239),
                   borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: kPrimaryColor, width: 1.0),
                 ),
                 child: Column(
                   children: [
@@ -116,8 +119,9 @@ class _SignInPageState extends State<SignInPage> {
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                 width: size.width * 0.8,
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 240, 239, 239),
+                  //color: Color.fromARGB(255, 240, 239, 239),
                   borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: kPrimaryColor, width: 1.0),
                 ),
                 child: Column(
                   children: [
@@ -177,7 +181,7 @@ class _SignInPageState extends State<SignInPage> {
                       );
                     },
                     child: Text(
-                      'Sign Up',
+                      'Sign-Up',
                       style: TextStyle(
                         color: kPrimaryColor,
                         fontWeight: FontWeight.bold,
@@ -185,6 +189,38 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                   ),
                 ],
+              ),
+
+              //Or divider
+              OrDivider(),
+
+              //Sign Up with google
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 10),
+                width: size.width * 0.8,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    final provider = Provider.of<GoogleSignInProvider>(context,
+                        listen: false);
+                    provider.googLogin();
+                  },
+                  icon: Image(
+                    image: AssetImage('assets/icons/google.png'),
+                    width: 20.0,
+                  ),
+                  label: Text(
+                    'Sign-In With Google',
+                    style: TextStyle(color: kPrimaryColor),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    side: BorderSide(width: 1.0, color: kPrimaryColor),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                    backgroundColor: Colors.white,
+                  ),
+                ),
               ),
             ],
           ),

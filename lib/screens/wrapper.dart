@@ -19,10 +19,18 @@ class _WrapperState extends State<Wrapper> {
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasData) {
           return Dump();
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('Something Went Wrong!'),
+          );
         } else {
-          return const SignInPage();
+          return SignInPage();
         }
       },
     );
