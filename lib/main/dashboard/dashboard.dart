@@ -1,3 +1,4 @@
+// ignore_for_file: prefer_const_constructors, file_names
 import 'package:flutter/material.dart';
 
 class TabBarDemo extends StatelessWidget {
@@ -13,24 +14,26 @@ class TabBarDemo extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                  'Kelas 7',
-                  style: TextStyle(fontSize: 18,),
-              ),
+                    'Kelas 7',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
                 ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Kelas 8',
-                  style: TextStyle(fontSize: 18),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Kelas 8',
+                    style: TextStyle(fontSize: 18),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Kelas 9',
-                  style: TextStyle(fontSize: 18),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Kelas 9',
+                    style: TextStyle(fontSize: 18),
+                  ),
                 ),
-              ),
               ],
             ),
             title: Center(child: Text("Math\'s Edu")),
