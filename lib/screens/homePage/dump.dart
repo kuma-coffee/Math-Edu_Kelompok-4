@@ -15,9 +15,21 @@ class Dump extends StatelessWidget {
     await Auth().signOut();
   }
 
-  Widget _userUid() {
-    return Text(user?.email ?? 'User email');
-  }
+  // Widget _userUid() {
+  //   return Text(user?.email ?? 'User email');
+  // }
+
+  // Widget _userPhoto() {
+  //   return Text(user?.photoURL ?? 'User PhotoURL');
+  // }
+
+  // Widget _userName() {
+  //   return Text(user?.displayName ?? 'User Name');
+  // }
+
+  // Widget _userPhone() {
+  //   return Text(user?.phoneNumber ?? 'User PhoneNumber');
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +48,48 @@ class Dump extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              _userUid(),
+              //_userUid(),
+              Text(
+                'Profile',
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 24,
+              ),
 
+              CircleAvatar(
+                radius: 40,
+                backgroundImage:
+                    NetworkImage(user?.photoURL ?? 'User PhotoURL'),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+
+              Text(
+                'Name: ${user?.displayName}',
+                style: TextStyle(fontSize: 18),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+
+              Text(
+                'Email: ${user?.email}',
+                style: TextStyle(fontSize: 18),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+
+              Text(
+                'Nomor Telepon: ${user?.phoneNumber}',
+                style: TextStyle(fontSize: 18),
+              ),
+
+              SizedBox(
+                height: 24,
+              ),
               //Sign out button
               Container(
                 margin: EdgeInsets.symmetric(vertical: 10),

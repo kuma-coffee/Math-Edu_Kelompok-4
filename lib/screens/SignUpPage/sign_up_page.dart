@@ -10,6 +10,7 @@ import 'package:maths_edu/screens/SignInPage/sign_in_page.dart';
 import 'package:maths_edu/screens/components/or_divider.dart';
 import 'package:maths_edu/services/auth.dart';
 import 'package:maths_edu/services/utils.dart';
+import 'package:provider/provider.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -33,12 +34,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    List socialImg = [
-      'facebook.png',
-      'google.png',
-      'twitter.png',
-    ];
-
     Size size = MediaQuery.of(context).size;
 
     return Form(
@@ -86,7 +81,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       height: size.height * 0.01,
                     ),
                     Text(
-                      'Create an account',
+                      'Create your account',
                       style: TextStyle(fontSize: 18),
                     ),
                     SizedBox(
@@ -100,8 +95,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                   width: size.width * 0.8,
                   decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 240, 239, 239),
+                    //color: Color.fromARGB(255, 240, 239, 239),
                     borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: kPrimaryColor, width: 1.0),
                   ),
                   child: Column(
                     children: [
@@ -135,9 +131,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                   width: size.width * 0.8,
                   decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 240, 239, 239),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                      //color: Color.fromARGB(255, 240, 239, 239),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: kPrimaryColor, width: 1.0)),
                   child: Column(
                     children: [
                       //Password textfield
@@ -171,7 +167,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       await signUp();
                     },
                     child: Text(
-                      'SIGN IN',
+                      'SIGN UP',
                       style: TextStyle(color: Colors.white),
                     ),
                     style: ElevatedButton.styleFrom(
@@ -219,27 +215,36 @@ class _SignUpPageState extends State<SignUpPage> {
                 //Or divider
                 OrDivider(),
 
-                //Sign Up with another way
-                Wrap(
-                  children: List<Widget>.generate(
-                    3,
-                    (index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CircleAvatar(
-                          radius: 28,
-                          backgroundColor: kPrimaryColor,
-                          child: CircleAvatar(
-                            radius: 25,
-                            backgroundColor: Colors.white,
-                            backgroundImage:
-                                AssetImage('assets/icons/' + socialImg[index]),
-                          ),
-                        ),
-                      );
+                //Sign Up with google
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10),
+                  width: size.width * 0.8,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      final provider = Provider.of<GoogleSignInProvider>(
+                          context,
+                          listen: false);
+                      provider.googLogin();
                     },
+                    icon: Image(
+                      image: AssetImage('assets/icons/google.png'),
+                      width: 20.0,
+                    ),
+                    label: Text(
+                      'Sign Up With Google',
+                      style: TextStyle(color: kPrimaryColor),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      side: BorderSide(width: 1.0, color: kPrimaryColor),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                      backgroundColor: Colors.white,
+                    ),
                   ),
-                )
+                ),
               ],
             ),
           ),
