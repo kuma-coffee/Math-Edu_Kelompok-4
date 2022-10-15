@@ -10,6 +10,7 @@ import 'package:maths_edu/screens/SignInPage/sign_in_page.dart';
 import 'package:maths_edu/screens/components/or_divider.dart';
 import 'package:maths_edu/services/auth.dart';
 import 'package:maths_edu/services/utils.dart';
+import 'package:provider/provider.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -33,12 +34,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    List socialImg = [
-      'facebook.png',
-      'google.png',
-      'twitter.png',
-    ];
-
     Size size = MediaQuery.of(context).size;
 
     return Form(
@@ -86,7 +81,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       height: size.height * 0.01,
                     ),
                     Text(
-                      'Create an account',
+                      'Create your account',
                       style: TextStyle(fontSize: 18),
                     ),
                     SizedBox(
@@ -204,7 +199,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         );
                       },
                       child: Text(
-                        'Sign-In',
+                        'Sign In',
                         style: TextStyle(
                           color: kPrimaryColor,
                           fontWeight: FontWeight.bold,
@@ -225,13 +220,18 @@ class _SignUpPageState extends State<SignUpPage> {
                   margin: EdgeInsets.symmetric(vertical: 10),
                   width: size.width * 0.8,
                   child: ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      final provider = Provider.of<GoogleSignInProvider>(
+                          context,
+                          listen: false);
+                      provider.googLogin();
+                    },
                     icon: Image(
                       image: AssetImage('assets/icons/google.png'),
                       width: 20.0,
                     ),
                     label: Text(
-                      'Sign-Up With Google',
+                      'Sign Up With Google',
                       style: TextStyle(color: kPrimaryColor),
                     ),
                     style: ElevatedButton.styleFrom(

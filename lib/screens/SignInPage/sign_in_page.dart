@@ -1,10 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:maths_edu/constants.dart';
 import 'package:maths_edu/main.dart';
+import 'package:maths_edu/screens/ForgotPass/forgot_pass_page.dart';
 import 'package:maths_edu/screens/SignUpPage/sign_up_page.dart';
 import 'package:maths_edu/screens/components/or_divider.dart';
 import 'package:maths_edu/services/auth.dart';
@@ -96,16 +98,22 @@ class _SignInPageState extends State<SignInPage> {
                 child: Column(
                   children: [
                     //Email textfield
-                    TextField(
+                    TextFormField(
                       controller: emailController,
                       onChanged: (value) {},
                       decoration: InputDecoration(
-                          icon: Icon(
-                            FontAwesomeIcons.solidUser,
-                            color: kPrimaryColor,
-                          ),
-                          hintText: 'Email',
-                          border: InputBorder.none),
+                        icon: Icon(
+                          FontAwesomeIcons.solidUser,
+                          color: kPrimaryColor,
+                        ),
+                        hintText: 'Email',
+                        border: InputBorder.none,
+                      ),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (email) =>
+                          email != null && !EmailValidator.validate(email)
+                              ? 'Enter a valid email'
+                              : null,
                     ),
                   ],
                 ),
@@ -119,16 +127,15 @@ class _SignInPageState extends State<SignInPage> {
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                 width: size.width * 0.8,
                 decoration: BoxDecoration(
-                  //color: Color.fromARGB(255, 240, 239, 239),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: kPrimaryColor, width: 1.0),
-                ),
+                    //color: Color.fromARGB(255, 240, 239, 239),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: kPrimaryColor, width: 1.0)),
                 child: Column(
                   children: [
                     //Password textfield
-                    TextField(
-                      onChanged: (value) {},
+                    TextFormField(
                       controller: passwordController,
+                      onChanged: (value) {},
                       obscureText: true,
                       decoration: InputDecoration(
                         hintText: "Password",
@@ -137,6 +144,39 @@ class _SignInPageState extends State<SignInPage> {
                           color: kPrimaryColor,
                         ),
                         border: InputBorder.none,
+                      ),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) => value != null && value.length < 6
+                          ? 'Enter min. 6 characters'
+                          : null,
+                    ),
+                  ],
+                ),
+              ),
+
+              // forgot password
+              Padding(
+                padding: const EdgeInsets.only(right: 40.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return ForgotPasswordPage();
+                            },
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'Forgot Password?',
+                        style: TextStyle(
+                          color: kPrimaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
@@ -181,7 +221,7 @@ class _SignInPageState extends State<SignInPage> {
                       );
                     },
                     child: Text(
-                      'Sign-Up',
+                      'Sign Up',
                       style: TextStyle(
                         color: kPrimaryColor,
                         fontWeight: FontWeight.bold,
@@ -209,7 +249,7 @@ class _SignInPageState extends State<SignInPage> {
                     width: 20.0,
                   ),
                   label: Text(
-                    'Sign-In With Google',
+                    'Sign In With Google',
                     style: TextStyle(color: kPrimaryColor),
                   ),
                   style: ElevatedButton.styleFrom(

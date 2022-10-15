@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:maths_edu/screens/SignInPage/sign_in_page.dart';
 import 'package:maths_edu/screens/VerifyEmail/verify_email_page.dart';
-import 'package:maths_edu/screens/homePage/dump.dart';
 
 class Wrapper extends StatefulWidget {
   const Wrapper({Key? key}) : super(key: key);
@@ -24,7 +23,7 @@ class _WrapperState extends State<Wrapper> {
             child: CircularProgressIndicator(),
           );
         } else if (snapshot.hasData) {
-          return Dump();
+          return VerifyEmailPage();
         } else if (snapshot.hasError) {
           return Center(
             child: Text('Something Went Wrong!'),
