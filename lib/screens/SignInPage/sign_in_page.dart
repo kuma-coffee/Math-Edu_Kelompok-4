@@ -207,7 +207,7 @@ class _SignInPageState extends State<SignInPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    'Already have an Account? ',
+                    'Don\'t have an account? ',
                   ),
                   GestureDetector(
                     onTap: () {
