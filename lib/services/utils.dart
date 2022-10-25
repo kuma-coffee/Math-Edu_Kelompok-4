@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 class Utils {
   static final messengerKey = GlobalKey<ScaffoldMessengerState>();
 
-  static showSnackBar(String? text) {
+  static showSnackBar(String? text, Color color) {
     if (text == null) return;
 
     final snackBar = SnackBar(
       content: Text(text),
-      backgroundColor: Colors.red,
+      backgroundColor: color,
     );
 
     messengerKey.currentState!

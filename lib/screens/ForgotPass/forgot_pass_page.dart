@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:maths_edu/constants.dart';
+import 'package:maths_edu/screens/SignInPage/sign_in_page.dart';
 import 'package:maths_edu/services/utils.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
@@ -28,6 +29,19 @@ class _ForgotPasswordPage extends State<ForgotPasswordPage> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(16),
+          top: Radius.circular(16),
+        )),
+        leading: BackButton(
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
       body: Container(
         height: size.height,
         width: double.infinity,
@@ -125,12 +139,12 @@ class _ForgotPasswordPage extends State<ForgotPasswordPage> {
       await FirebaseAuth.instance
           .sendPasswordResetEmail(email: emailController.text.trim());
 
-      Utils.showSnackBar('Password Reset Email Sent');
+      Utils.showSnackBar('Password Reset Email Sent', Colors.red);
       Navigator.of(context).popUntil((route) => route.isFirst);
     } on FirebaseAuthException catch (e) {
       print(e);
 
-      Utils.showSnackBar(e.message);
+      Utils.showSnackBar(e.message, Colors.red);
       Navigator.of(context).pop();
     }
   }
