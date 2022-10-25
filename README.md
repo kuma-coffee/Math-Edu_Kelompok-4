@@ -1,3 +1,4 @@
+![alt text](https://github.com/kuma-coffee/Math-Edu_Kelompok-4/blob/main/assets/images/launch_image.png?raw=true)
 # Math Edu for Junior High School
 # Aplikasi Belajar Matematika untuk Sekolah Menengah Pertama (SMP) 
 
