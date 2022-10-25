@@ -51,7 +51,7 @@ class _SignInPageState extends State<SignInPage> {
             children: [
               //Logo
               Container(
-                height: size.height * 0.2,
+                height: size.height * 0.18,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage(
@@ -81,7 +81,7 @@ class _SignInPageState extends State<SignInPage> {
                     style: TextStyle(fontSize: 18),
                   ),
                   SizedBox(
-                    height: size.height * 0.05,
+                    height: size.height * 0.02,
                   ),
                 ],
               ),
@@ -207,7 +207,7 @@ class _SignInPageState extends State<SignInPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    'Already have an Account? ',
+                    'Don\'t have an account? ',
                   ),
                   GestureDetector(
                     onTap: () {
@@ -283,7 +283,7 @@ class _SignInPageState extends State<SignInPage> {
     } on FirebaseAuthException catch (e) {
       print(e);
 
-      Utils.showSnackBar(e.message);
+      Utils.showSnackBar(e.message, Colors.red);
     }
 
     navigatorKey.currentState!.popUntil((route) => route.isFirst);

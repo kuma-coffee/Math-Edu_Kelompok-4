@@ -1,18 +1,54 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:maths_edu/constants.dart';
+import 'package:maths_edu/screens/homePage/editAccount.dart';
 import 'package:maths_edu/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class Dump extends StatelessWidget {
-  Dump({super.key});
+class Dump extends StatefulWidget {
+  const Dump({super.key});
 
+  @override
+  State<Dump> createState() => _DumpState();
+}
+
+class _DumpState extends State<Dump> {
   final User? user = Auth().currentUser;
+  late DocumentReference _documentReference;
+
+  void initState() {
+    super.initState();
+    updateUsername();
+    updateProfileImg();
+  }
 
   //import sign out
   Future<void> signOut() async {
     await Auth().signOut();
+  }
+
+  Future updateUsername() async {
+    final userProfile = FirebaseFirestore.instance
+        .collection('userProfile')
+        .where('uid', isEqualTo: user?.uid)
+        .snapshots()
+        .listen((data) => data.docs
+            .forEach((doc) => user?.updateDisplayName(doc['username'])));
+    return userProfile;
+  }
+
+  Future updateProfileImg() async {
+    final userProfile = FirebaseFirestore.instance
+        .collection('userProfile')
+        .where('uid', isEqualTo: user?.uid)
+        .snapshots()
+        .listen((data) => data.docs
+            .forEach((doc) => user?.updatePhotoURL(doc['profileImg'])));
+    //return print(userProfile.toString());
+    return userProfile;
   }
 
   // Widget _userUid() {
@@ -57,17 +93,36 @@ class Dump extends StatelessWidget {
                 height: 24,
               ),
 
-              CircleAvatar(
-                radius: 40,
-                backgroundImage:
-                    NetworkImage(user?.photoURL ?? 'User PhotoURL'),
+              // CircleAvatar(
+              //   radius: 40,
+              //   backgroundImage:
+              //       NetworkImage(user?.photoURL ?? 'User PhotoURL'),
+              // ),
+              Center(
+                child: Stack(
+                  children: [
+                    ClipOval(
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Ink.image(
+                          image:
+                              NetworkImage(user?.photoURL ?? 'User PhotoURL'),
+                          fit: BoxFit.cover,
+                          width: 128,
+                          height: 128,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
+
               SizedBox(
                 height: 10,
               ),
 
               Text(
-                'Name: ${user?.displayName}',
+                'Username: ${user?.displayName}',
                 style: TextStyle(fontSize: 18),
               ),
               SizedBox(
@@ -78,18 +133,39 @@ class Dump extends StatelessWidget {
                 'Email: ${user?.email}',
                 style: TextStyle(fontSize: 18),
               ),
-              SizedBox(
-                height: 10,
-              ),
-
-              Text(
-                'Nomor Telepon: ${user?.phoneNumber}',
-                style: TextStyle(fontSize: 18),
-              ),
 
               SizedBox(
-                height: 24,
+                height: 32,
               ),
+              //Sign out button
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 10),
+                width: size.width * 0.8,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return editAcc();
+                        },
+                      ),
+                    );
+                  },
+                  child: Text(
+                    'EDIT ACCOUNT',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                    backgroundColor: kPrimaryColor,
+                  ),
+                ),
+              ),
+
               //Sign out button
               Container(
                 margin: EdgeInsets.symmetric(vertical: 10),
@@ -118,3 +194,30 @@ class Dump extends StatelessWidget {
     );
   }
 }
+
+Widget buildEditIcon(Color color) => buildCircle(
+      color: Colors.white,
+      all: 3,
+      child: buildCircle(
+        color: color,
+        all: 8,
+        child: Icon(
+          Icons.edit,
+          color: Colors.white,
+          size: 20,
+        ),
+      ),
+    );
+
+Widget buildCircle({
+  required Widget child,
+  required double all,
+  required Color color,
+}) =>
+    ClipOval(
+      child: Container(
+        padding: EdgeInsets.all(all),
+        color: color,
+        child: child,
+      ),
+    );

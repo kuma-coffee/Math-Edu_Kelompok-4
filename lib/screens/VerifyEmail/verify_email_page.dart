@@ -6,7 +6,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:maths_edu/constants.dart';
+import 'package:maths_edu/screens/SignInPage/sign_in_page.dart';
 import 'package:maths_edu/screens/homePage/dump.dart';
+import 'package:maths_edu/screens/homePage/editAccount.dart';
 import 'package:maths_edu/services/utils.dart';
 
 class VerifyEmailPage extends StatefulWidget {
@@ -82,13 +84,36 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
       await Future.delayed(Duration(seconds: 10));
       setState(() => canResendEmail = true);
     } catch (e) {
-      Utils.showSnackBar(e.toString());
+      Utils.showSnackBar(e.toString(), Colors.red);
     }
   }
 
   Widget build(BuildContext context) => isEmailVerified
       ? Dump()
       : Scaffold(
+          extendBodyBehindAppBar: true,
+          appBar: AppBar(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(16),
+              top: Radius.circular(16),
+            )),
+            leading: BackButton(
+              color: Colors.white,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return SignInPage();
+                    },
+                  ),
+                );
+              },
+            ),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ),
           body: Container(
             decoration: BoxDecoration(
               image: DecorationImage(

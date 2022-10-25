@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,11 +22,13 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final formKey = GlobalKey<FormState>();
+  final usernameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   @override
   void dispose() {
+    usernameController.dispose();
     emailController.dispose();
     passwordController.dispose();
 
@@ -54,7 +57,7 @@ class _SignUpPageState extends State<SignUpPage> {
               children: [
                 //Logo
                 Container(
-                  height: size.height * 0.2,
+                  height: size.height * 0.18,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage(
@@ -85,9 +88,44 @@ class _SignUpPageState extends State<SignUpPage> {
                       style: TextStyle(fontSize: 18),
                     ),
                     SizedBox(
-                      height: size.height * 0.05,
+                      height: size.height * 0.02,
                     ),
                   ],
+                ),
+
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 5),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                  width: size.width * 0.8,
+                  decoration: BoxDecoration(
+                    //color: Color.fromARGB(255, 240, 239, 239),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: kPrimaryColor, width: 1.0),
+                  ),
+                  child: Column(
+                    children: [
+                      //Email textfield
+                      TextFormField(
+                        controller: usernameController,
+                        onChanged: (value) {},
+                        decoration: InputDecoration(
+                          icon: Icon(
+                            FontAwesomeIcons.solidUser,
+                            color: kPrimaryColor,
+                          ),
+                          hintText: 'Username',
+                          border: InputBorder.none,
+                        ),
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: (value) => value != null && value.isEmpty
+                            ? 'Enter a valid usernmae'
+                            : null,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: size.height * 0.01,
                 ),
 
                 Container(
@@ -267,10 +305,27 @@ class _SignUpPageState extends State<SignUpPage> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
+      CollectionReference userProfile =
+          FirebaseFirestore.instance.collection('userProfile');
+      await userProfile.doc().set({
+        'uid': Auth().currentUser?.uid,
+        'profileImg':
+            'https://firebasestorage.googleapis.com/v0/b/mathedu-kelompok4.appspot.com/o/userDefaultLogo.png?alt=media&token=a2722a2a-0199-4841-9b6f-18928d8b06a2',
+        'username': usernameController.text.trim(),
+        'email': emailController.text.trim(),
+        'password': passwordController.text.trim(),
+      });
+      // CollectionReference userProfile =
+      //     FirebaseFirestore.instance.collection('userProfile');
+      // await userProfile.doc().set({
+      //   'id': userProfile.doc().id,
+      //   'imgUrl':
+      //       'https://firebasestorage.googleapis.com/v0/b/mathedu-kelompok4.appspot.com/o/userDefaultLogo.png?alt=media&token=a2722a2a-0199-4841-9b6f-18928d8b06a2',
+      // });
     } on FirebaseAuthException catch (e) {
       print(e);
 
-      Utils.showSnackBar(e.message);
+      Utils.showSnackBar(e.message, Colors.red);
     }
 
     navigatorKey.currentState!.popUntil((route) => route.isFirst);

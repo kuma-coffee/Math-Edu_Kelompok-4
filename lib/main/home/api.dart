@@ -15,9 +15,9 @@ class ApiServices {
     var file = pick.readAsBytesSync();
     String name = DateTime.now().millisecondsSinceEpoch.toString();
 
-    var pdfFile =
+    var imgFile =
         FirebaseStorage.instance.ref().child(name).child('/.jpg' + '/.png');
-    UploadTask task = pdfFile.putData(file);
+    UploadTask task = imgFile.putData(file);
     TaskSnapshot snapshot = await task;
     url = await snapshot.ref.getDownloadURL();
     CollectionReference babName = FirebaseFirestore.instance.collection('bab');
@@ -38,9 +38,9 @@ class ApiServices {
     var file = pick.readAsBytesSync();
     String name = DateTime.now().millisecondsSinceEpoch.toString();
 
-    var pdfFile =
+    var imgFile =
         FirebaseStorage.instance.ref().child(name).child('/.jpg' + '/.png');
-    UploadTask task = pdfFile.putData(file);
+    UploadTask task = imgFile.putData(file);
     TaskSnapshot snapshot = await task;
     url = await snapshot.ref.getDownloadURL();
     Map<String, dynamic> updateBab = ({
@@ -63,9 +63,9 @@ class ApiServices {
     var file = pick.readAsBytesSync();
     String name = DateTime.now().millisecondsSinceEpoch.toString();
 
-    var pdfFile =
+    var imgFile =
         FirebaseStorage.instance.ref().child(name).child('/.jpg' + '/.png');
-    UploadTask task = pdfFile.putData(file);
+    UploadTask task = imgFile.putData(file);
     TaskSnapshot snapshot = await task;
     url = await snapshot.ref.getDownloadURL();
 
@@ -86,9 +86,9 @@ class ApiServices {
     var file = pick.readAsBytesSync();
     String name = DateTime.now().millisecondsSinceEpoch.toString();
 
-    var pdfFile =
+    var imgFile =
         FirebaseStorage.instance.ref().child(name).child('/.jpg' + '/.png');
-    UploadTask task = pdfFile.putData(file);
+    UploadTask task = imgFile.putData(file);
     TaskSnapshot snapshot = await task;
     url = await snapshot.ref.getDownloadURL();
 
@@ -112,9 +112,9 @@ class ApiServices {
   //   var file = pick.readAsBytesSync();
   //   String name = DateTime.now().millisecondsSinceEpoch.toString();
 
-  //   var pdfFile =
+  //   var imgFile =
   //       FirebaseStorage.instance.ref().child(name).child('/.jpg' + '/.png');
-  //   UploadTask task = pdfFile.putData(file);
+  //   UploadTask task = imgFile.putData(file);
   //   TaskSnapshot snapshot = await task;
   //   url = await snapshot.ref.getDownloadURL();
 
