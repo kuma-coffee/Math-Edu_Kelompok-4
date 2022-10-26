@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:maths_edu/constants.dart';
-import 'package:maths_edu/screens/homePage/editAccount.dart';
+import 'package:maths_edu/screens/home/editAccount.dart';
 import 'package:maths_edu/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

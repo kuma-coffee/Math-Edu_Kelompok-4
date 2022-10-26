@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:maths_edu/constants.dart';
 import 'package:maths_edu/main.dart';
-import 'package:maths_edu/screens/SignInPage/sign_in_page.dart';
+import 'package:maths_edu/screens/auth/SignInPage/sign_in_page.dart';
 import 'package:maths_edu/screens/components/or_divider.dart';
 import 'package:maths_edu/services/auth.dart';
 import 'package:maths_edu/services/utils.dart';

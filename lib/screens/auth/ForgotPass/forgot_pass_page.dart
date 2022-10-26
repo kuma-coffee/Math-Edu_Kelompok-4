@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:maths_edu/constants.dart';
-import 'package:maths_edu/screens/SignInPage/sign_in_page.dart';
 import 'package:maths_edu/services/utils.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
@@ -110,7 +109,7 @@ class _ForgotPasswordPage extends State<ForgotPasswordPage> {
                 child: ElevatedButton(
                   onPressed: resetPassword,
                   child: Text(
-                    'SIGN IN',
+                    'RESET PASSWORD',
                     style: TextStyle(color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(

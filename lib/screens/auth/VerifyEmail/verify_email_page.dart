@@ -2,13 +2,11 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:maths_edu/constants.dart';
-import 'package:maths_edu/screens/SignInPage/sign_in_page.dart';
-import 'package:maths_edu/screens/homePage/dump.dart';
-import 'package:maths_edu/screens/homePage/editAccount.dart';
+import 'package:maths_edu/screens/auth/SignInPage/sign_in_page.dart';
+import 'package:maths_edu/screens/home/dump.dart';
 import 'package:maths_edu/services/utils.dart';
 
 class VerifyEmailPage extends StatefulWidget {
