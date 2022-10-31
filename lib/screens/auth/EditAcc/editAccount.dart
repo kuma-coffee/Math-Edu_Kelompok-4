@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:maths_edu/constants.dart';
 import 'package:maths_edu/screens/auth/ForgotPass/forgot_pass_page.dart';
-import 'package:maths_edu/screens/home/dump.dart';
+import 'package:maths_edu/screens/auth/profilePage/profile_page.dart';
 import 'package:maths_edu/services/auth.dart';
 import 'package:maths_edu/services/utils.dart';
 
@@ -59,7 +59,7 @@ class _editAccState extends State<editAcc> {
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return Dump();
+                  return profilePage();
                 },
               ),
             );
