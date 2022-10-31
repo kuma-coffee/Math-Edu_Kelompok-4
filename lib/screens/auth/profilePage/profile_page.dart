@@ -4,20 +4,19 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:maths_edu/constants.dart';
-import 'package:maths_edu/screens/homePage/editAccount.dart';
+import 'package:maths_edu/screens/auth/EditAcc/editAccount.dart';
 import 'package:maths_edu/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class Dump extends StatefulWidget {
-  const Dump({super.key});
+class profilePage extends StatefulWidget {
+  const profilePage({super.key});
 
   @override
-  State<Dump> createState() => _DumpState();
+  State<profilePage> createState() => _profilePageState();
 }
 
-class _DumpState extends State<Dump> {
+class _profilePageState extends State<profilePage> {
   final User? user = Auth().currentUser;
-  late DocumentReference _documentReference;
 
   void initState() {
     super.initState();

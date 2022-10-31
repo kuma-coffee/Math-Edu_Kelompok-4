@@ -3,21 +3,16 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:maths_edu/constants.dart';
-import 'package:maths_edu/main.dart';
-import 'package:maths_edu/screens/ForgotPass/forgot_pass_page.dart';
-import 'package:maths_edu/screens/SignUpPage/sign_up_page.dart';
-import 'package:maths_edu/screens/components/or_divider.dart';
-import 'package:maths_edu/screens/homePage/dump.dart';
+import 'package:maths_edu/screens/auth/ForgotPass/forgot_pass_page.dart';
+import 'package:maths_edu/screens/auth/profilePage/profile_page.dart';
 import 'package:maths_edu/services/auth.dart';
 import 'package:maths_edu/services/utils.dart';
-import 'package:provider/provider.dart';
 
 class editAcc extends StatefulWidget {
   const editAcc({super.key});
@@ -64,7 +59,7 @@ class _editAccState extends State<editAcc> {
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return Dump();
+                  return profilePage();
                 },
               ),
             );
