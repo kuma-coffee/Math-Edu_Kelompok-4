@@ -3,70 +3,68 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:maths_edu/main/home/api.dart';
-import 'package:maths_edu/main/home/materi/InputMateri.dart';
-import 'package:maths_edu/main/home/materi/updateMateri.dart';
-import 'package:maths_edu/main/home/viewPDF.dart';
+import 'package:maths_edu/main/home/materi/materi_list_page.dart';
+import 'package:maths_edu/main/home/subBab/input_subBab_page.dart';
+import 'package:maths_edu/main/home/subBab/update_subBab_page.dart';
 
-class createMateri extends StatefulWidget {
-  createMateri(this.babIdData, this.subBabIdData, {Key? key})
-      : super(key: key) {
-    _babIdData = babIdData;
-    _subBabIdData = subBabIdData;
+class SubBabList extends StatefulWidget {
+  SubBabList(this.babIdData, {Key? key}) : super(key: key) {
     _documentReferenceBab =
         FirebaseFirestore.instance.collection('bab').doc(babIdData['id']);
-    _documentReferenceSubBab =
-        _documentReferenceBab.collection('subBab').doc(subBabIdData['id']);
-    _referenceMateri = _documentReferenceSubBab.collection('materi');
-    _streamMateri =
-        _referenceMateri.orderBy('timePost', descending: true).snapshots();
+    _referenceSubBab = _documentReferenceBab.collection('subBab');
+    _streamSubBab =
+        _referenceSubBab.orderBy('timePost', descending: true).snapshots();
+    _babIdData = babIdData;
   }
-
   Map babIdData;
-  Map subBabIdData;
   @override
-  State<createMateri> createState() => _createMateriState();
+  State<SubBabList> createState() => _SubBabListState();
 }
 
-late Map _babIdData;
-late Map _subBabIdData;
+// String url = '';
+// final textController = TextEditingController();
+// late int number;
+
 late DocumentReference _documentReferenceBab;
 late DocumentReference _documentReferenceSubBab;
-late DocumentReference _documentReferenceMateri;
-late CollectionReference _referenceMateri;
-late Stream<QuerySnapshot> _streamMateri;
+late CollectionReference _referenceSubBab;
+late Stream<QuerySnapshot> _streamSubBab;
+late Map _babIdData;
 
-class _createMateriState extends State<createMateri> {
-  // String url = '';
-  // late int number;
+// uploadCollectionToFirebase() async {
+//   FilePickerResult? result = await FilePicker.platform.pickFiles();
+//   File pick = File(result!.files.single.path.toString());
+//   var file = pick.readAsBytesSync();
+//   String name = DateTime.now().millisecondsSinceEpoch.toString();
 
-  // uploadDataToFirebase() async {
-  //   number = Random().nextInt(10);
-  //   FilePickerResult? result = await FilePicker.platform.pickFiles();
-  //   File pick = File(result!.files.single.path.toString());
-  //   var file = pick.readAsBytesSync();
-  //   String name = DateTime.now().millisecondsSinceEpoch.toString();
+//   var pdfFile =
+//       FirebaseStorage.instance.ref().child(name).child('/.jpg' + '/.png');
+//   UploadTask task = pdfFile.putData(file);
+//   TaskSnapshot snapshot = await task;
+//   url = await snapshot.ref.getDownloadURL();
 
-  //   var pdfFile = FirebaseStorage.instance.ref().child(name).child('/.pdf');
-  //   UploadTask task = pdfFile.putData(file);
-  //   TaskSnapshot snapshot = await task;
-  //   url = await snapshot.ref.getDownloadURL();
-  //   await FirebaseFirestore.instance.collection('file').doc().set({
-  //     'fileUrl': url,
-  //     'name': 'Book' + number.toString(),
-  //   });
-  // }
+//   Map<String, dynamic> inputSubBab = ({
+//     'id': _referenceSubBab.doc().id,
+//     'imgUrl': url,
+//     'subBabName': textController.text.trim(),
+//     'timePost': FieldValue.serverTimestamp()
+//   });
+//   _referenceSubBab.add(inputSubBab);
+//   return "Success";
+// }
 
+class _SubBabListState extends State<SubBabList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('MATERI'),
+        title: Text('SUB BAB'),
         actions: [
           IconButton(
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => InputMateri(_babIdData, _subBabIdData),
+                  builder: (context) => InputSubBab(_babIdData),
                 ),
               );
             },
@@ -75,7 +73,7 @@ class _createMateriState extends State<createMateri> {
         ],
       ),
       body: StreamBuilder(
-          stream: _streamMateri,
+          stream: _streamSubBab,
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
               return Center(child: Text('Error:${snapshot.error}'));
@@ -84,7 +82,7 @@ class _createMateriState extends State<createMateri> {
               QuerySnapshot data = snapshot.data!;
               List<QueryDocumentSnapshot> documents = data.docs;
               List<Map> items = documents
-                  .map((e) => {'id': e.id, 'name': e['name']})
+                  .map((e) => {'id': e.id, 'subBabName': e['subBabName']})
                   .toList();
               return ListView.builder(
                   itemCount: snapshot.data!.docs.length,
@@ -96,20 +94,26 @@ class _createMateriState extends State<createMateri> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => View(
-                              url: x['fileUrl'],
-                              name: x['name'],
-                            ),
-                          ),
+                              builder: (context) =>
+                                  createMateri(_babIdData, listItems)),
                         );
                       },
                       child: ListTile(
+                        leading: ClipOval(
+                          child: Image.network(
+                            x['imgUrl'],
+                            width: 52,
+                            height: 52,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                         title: Text(
-                          x['name'],
+                          x['subBabName'],
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
-                            color: Colors.blue,
+                            decoration: TextDecoration.none,
+                            color: Colors.black,
+                            fontSize: 20,
                           ),
                         ),
                         trailing: Wrap(
@@ -125,10 +129,8 @@ class _createMateriState extends State<createMateri> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => updateMateri(
-                                            _babIdData,
-                                            _subBabIdData,
-                                            listItems)),
+                                        builder: (context) => UpdateSubBab(
+                                            _babIdData, listItems)),
                                   );
                                 },
                               ),
@@ -140,17 +142,17 @@ class _createMateriState extends State<createMateri> {
                                   color: Colors.black,
                                 ),
                                 onPressed: () async {
-                                  _documentReferenceMateri =
-                                      _documentReferenceSubBab
-                                          .collection('materi')
+                                  _documentReferenceSubBab =
+                                      _documentReferenceBab
+                                          .collection('subBab')
                                           .doc(listItems['id']);
                                   // _documentSnapshot =
                                   //     await _documentReference.get().
                                   // var docID = _documentSnapshot.reference.id;
 
                                   ApiServices services = ApiServices();
-                                  services.deletePDFToFirebase(
-                                      _documentReferenceMateri);
+                                  services.deleteCollectionToFirebase(
+                                      _documentReferenceSubBab);
                                 },
                               ),
                             ),
@@ -164,10 +166,6 @@ class _createMateriState extends State<createMateri> {
               child: CircularProgressIndicator(),
             );
           }),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: uploadDataToFirebase,
-      //   child: Icon(Icons.add),
-      // ),
     );
   }
 }

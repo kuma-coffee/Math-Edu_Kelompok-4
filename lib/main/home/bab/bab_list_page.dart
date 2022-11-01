@@ -2,21 +2,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:maths_edu/main/home/api.dart';
-import 'package:maths_edu/main/home/bab/inputBab.dart';
-import 'package:maths_edu/main/home/bab/updateBab.dart';
-import 'package:maths_edu/main/home/subBab/createSubBab.dart';
+import 'package:maths_edu/main/home/bab/input_bab_page.dart';
+import 'package:maths_edu/main/home/bab/update_bab_page.dart';
+import 'package:maths_edu/main/home/subBab/subBab_list_page.dart';
 
-class createBab extends StatefulWidget {
-  const createBab({Key? key}) : super(key: key);
+class BabList extends StatefulWidget {
+  const BabList({Key? key}) : super(key: key);
 
   @override
-  State<createBab> createState() => _createBabState();
+  State<BabList> createState() => _BabListState();
 }
 
 late DocumentReference _documentReference;
-late DocumentSnapshot _documentSnapshot;
 
-class _createBabState extends State<createBab> {
+class _BabListState extends State<BabList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +59,7 @@ class _createBabState extends State<createBab> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => createSubBab(listItems)),
+                              builder: (context) => SubBabList(listItems)),
                         );
                       },
                       child: ListTile(
@@ -76,8 +75,9 @@ class _createBabState extends State<createBab> {
                           x['babName'],
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
-                            color: Colors.blue,
+                            decoration: TextDecoration.none,
+                            color: Colors.black,
+                            fontSize: 20,
                           ),
                         ),
                         trailing: Wrap(
@@ -94,7 +94,7 @@ class _createBabState extends State<createBab> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            updateBab(listItems)),
+                                            UpdateBab(listItems)),
                                   );
                                 },
                               ),
