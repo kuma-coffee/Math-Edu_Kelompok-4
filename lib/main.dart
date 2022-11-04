@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:maths_edu/screens/wrapper.dart';
 import 'package:maths_edu/services/utils.dart';
 
+import 'main/dashboard/dashboard.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -20,7 +22,7 @@ class MyApp extends StatelessWidget {
       scaffoldMessengerKey: Utils.messengerKey,
       navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
-      home: const Wrapper(),
+      home: Dashboard(),
     );
   }
 }
