@@ -7,6 +7,8 @@ import 'package:maths_edu/services/auth.dart';
 import 'package:maths_edu/services/utils.dart';
 import 'package:provider/provider.dart';
 
+import 'main/dashboard/dashboard.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
