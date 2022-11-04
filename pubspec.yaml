@@ -42,6 +42,17 @@ dependencies:
   provider: ^6.0.3
   firebase_core: ^1.24.0
   email_validator: ^2.1.17
+  file_picker: ^5.2.0+1
+  firebase_storage: ^10.3.10
+  path_provider: ^2.0.11
+  flutter_pdfview: ^1.2.5
+  http: ^0.13.5
+  path: ^1.8.2
+  dio: ^4.0.6
+  gallery_saver: ^2.3.2
+  google_sign_in: ^5.4.2
+  syncfusion_flutter_pdfviewer: ^20.3.48
+  google_fonts: ^3.0.1
 
 flutter_native_splash:
   android: true
@@ -69,10 +80,10 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-  # fonts:
-  #   - family: BobbyJones
-  #     fonts:
-  #       - asset: assets/fonts/BobbyRoughSoft.ttf
+  fonts:
+    - family: ZenMaruGothic
+      fonts:
+        - asset: assets/fonts/ZenMaruGothic-Medium.ttf
 
   # To add assets to your application, add an assets section, like this:
   assets:
