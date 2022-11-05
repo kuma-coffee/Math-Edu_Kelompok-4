@@ -4,22 +4,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:maths_edu/main/home/api.dart';
-import 'package:maths_edu/main/home/materi/input_materi_page.dart';
-import 'package:maths_edu/main/home/materi/update_materi_page.dart';
 import 'package:maths_edu/main/home/subBab/subBab_list_page.dart';
 import 'package:maths_edu/main/home/test/input_question_page.dart';
 import 'package:maths_edu/main/home/test/question_page.dart';
 import 'package:maths_edu/main/home/test/score_page.dart';
 import 'package:maths_edu/main/home/test/update_question_page.dart';
-import 'package:maths_edu/main/home/viewPDF.dart';
 import 'package:maths_edu/services/auth.dart';
 
 class TestList extends StatefulWidget {
-  TestList(this.babIdData, this.testID, {Key? key}) : super(key: key) {
+  TestList(this.kelasId, this.babIdData, this.testID, {Key? key})
+      : super(key: key) {
+    _kelasId = kelasId;
     _babIdData = babIdData;
     _testID = testID;
     _documentReferenceBab =
-        FirebaseFirestore.instance.collection('bab').doc(babIdData['id']);
+        FirebaseFirestore.instance.collection(kelasId).doc(babIdData['id']);
     _documentReferenceTest =
         _documentReferenceBab.collection('test').doc(testID['id']);
     _referenceTestList = _documentReferenceTest.collection('testList');
@@ -28,7 +27,7 @@ class TestList extends StatefulWidget {
     _streamMateri =
         _referenceTestList.orderBy('timePost', descending: false).snapshots();
   }
-
+  String kelasId;
   Map babIdData;
   Map testID;
   final User? user = Auth().currentUser;
@@ -37,6 +36,7 @@ class TestList extends StatefulWidget {
   State<TestList> createState() => _TestListState();
 }
 
+late String _kelasId;
 late Map _babIdData;
 late Map _testID;
 late DocumentReference _documentReferenceBab;
@@ -58,7 +58,7 @@ class _TestListState extends State<TestList> {
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return SubBabList(_babIdData);
+                  return SubBabList(_kelasId, _babIdData);
                 },
               ),
             );
@@ -70,7 +70,8 @@ class _TestListState extends State<TestList> {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => InputQuestion(_babIdData, _testID),
+                  builder: (context) =>
+                      InputQuestion(_kelasId, _babIdData, _testID),
                 ),
               );
             },
@@ -78,15 +79,8 @@ class _TestListState extends State<TestList> {
           ),
         ],
       ),
-      body: Stack(
-        children: [
-          checkScore(),
-          Padding(
-            padding: EdgeInsets.only(top: 60),
-            child: testList(),
-          ),
-        ],
-      ),
+      body: testList(),
+      floatingActionButton: checkScore(),
     );
   }
 
@@ -113,18 +107,14 @@ class _TestListState extends State<TestList> {
                   builder: (context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData) {
                       DocumentSnapshot y = snapshot.data;
-                      print(y['score']);
                     }
-
-                    print(x);
-                    print(listItems['id']);
-
                     return InkWell(
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => QuestionPage(
+                              _kelasId,
                               x['name'],
                               x['question'],
                               x['answerA'],
@@ -169,7 +159,10 @@ class _TestListState extends State<TestList> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => UpdateQuestion(
-                                            _babIdData, _testID, listItems)),
+                                            _kelasId,
+                                            _babIdData,
+                                            _testID,
+                                            listItems)),
                                   );
                                 },
                               ),
@@ -216,7 +209,7 @@ class _TestListState extends State<TestList> {
           if (snapshot.hasData) {
             DocumentSnapshot y = snapshot.data;
             return Container(
-              alignment: Alignment.topRight,
+              alignment: Alignment.bottomRight,
               margin: EdgeInsets.symmetric(vertical: 10),
               width: size.width * 0.95,
               child: ElevatedButton(
@@ -227,7 +220,8 @@ class _TestListState extends State<TestList> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => scorePage(_babIdData, _testID)),
+                        builder: (context) =>
+                            scorePage(_kelasId, _babIdData, _testID)),
                   );
                 },
                 child: Text(

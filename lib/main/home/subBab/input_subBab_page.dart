@@ -5,17 +5,20 @@ import 'package:maths_edu/constants.dart';
 import 'package:maths_edu/main/home/api.dart';
 import 'package:maths_edu/main/home/subBab/subBab_list_page.dart';
 
+final textController = TextEditingController();
+
 class InputSubBab extends StatelessWidget {
-  InputSubBab(this.data, {Key? key}) : super(key: key) {
+  InputSubBab(this.kelasId, this.data, {Key? key}) : super(key: key) {
     _documentReference =
-        FirebaseFirestore.instance.collection('bab').doc(data['id']);
+        FirebaseFirestore.instance.collection(kelasId).doc(data['id']);
     _referenceSubBab = _documentReference.collection('subBab');
   }
+
+  String kelasId;
   Map data;
   late DocumentReference _documentReference;
   late CollectionReference _referenceSubBab;
   String url = '';
-  final textController = TextEditingController();
   late int number;
 
   @override
@@ -94,7 +97,7 @@ class InputSubBab extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => SubBabList(data),
+                      builder: (context) => SubBabList(kelasId, data),
                     ),
                   );
                 },

@@ -6,18 +6,29 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:maths_edu/constants.dart';
 import 'package:maths_edu/main/home/api.dart';
-import 'package:maths_edu/main/home/materi/materi_list_page.dart';
+import 'package:maths_edu/main/home/test/test_list_page.dart';
+
+final nameController = TextEditingController();
+final questionController = TextEditingController();
+final answerAController = TextEditingController();
+final answerBController = TextEditingController();
+final answerCController = TextEditingController();
+final answerDController = TextEditingController();
+final answerEController = TextEditingController();
+final answerController = TextEditingController();
 
 class UpdateQuestion extends StatelessWidget {
-  UpdateQuestion(this.babIdData, this.testID, this.testListID, {Key? key})
+  UpdateQuestion(this.kelasId, this.babIdData, this.testID, this.testListID,
+      {Key? key})
       : super(key: key) {
     _documentReferenceBab =
-        FirebaseFirestore.instance.collection('bab').doc(babIdData['id']);
+        FirebaseFirestore.instance.collection(kelasId).doc(babIdData['id']);
     _documentReferenceSubBab =
         _documentReferenceBab.collection('test').doc(testID['id']);
     _documentReferenceTestList =
         _documentReferenceSubBab.collection('testList').doc(testListID['id']);
   }
+  String kelasId;
   Map babIdData;
   Map testID;
   Map testListID;
@@ -26,14 +37,6 @@ class UpdateQuestion extends StatelessWidget {
   late DocumentReference _documentReferenceTestList;
 
   String url = '';
-  final nameController = TextEditingController();
-  final questionController = TextEditingController();
-  final answerAController = TextEditingController();
-  final answerBController = TextEditingController();
-  final answerCController = TextEditingController();
-  final answerDController = TextEditingController();
-  final answerEController = TextEditingController();
-  final answerController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -283,6 +286,12 @@ class UpdateQuestion extends StatelessWidget {
                         answerDController,
                         answerEController,
                         answerController);
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            TestList(kelasId, babIdData, testID),
+                      ),
+                    );
                   },
                   child: Text(
                     'SAVE',

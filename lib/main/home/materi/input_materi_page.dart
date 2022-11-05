@@ -10,14 +10,18 @@ import 'package:maths_edu/constants.dart';
 import 'package:maths_edu/main/home/api.dart';
 import 'package:maths_edu/main/home/materi/materi_list_page.dart';
 
+final textController = TextEditingController();
+
 class InputMateri extends StatelessWidget {
-  InputMateri(this.babIdData, this.subBabIdData, {Key? key}) : super(key: key) {
+  InputMateri(this.kelasId, this.babIdData, this.subBabIdData, {Key? key})
+      : super(key: key) {
     _documentReferenceBab =
-        FirebaseFirestore.instance.collection('bab').doc(babIdData['id']);
+        FirebaseFirestore.instance.collection(kelasId).doc(babIdData['id']);
     _documentReferenceSubBab =
         _documentReferenceBab.collection('subBab').doc(subBabIdData['id']);
     _referenceMateri = _documentReferenceSubBab.collection('materi');
   }
+  String kelasId;
   Map babIdData;
   Map subBabIdData;
   late DocumentReference _documentReferenceBab;
@@ -25,7 +29,6 @@ class InputMateri extends StatelessWidget {
   late CollectionReference _referenceMateri;
 
   String url = '';
-  final textController = TextEditingController();
   late int number;
 
   // uploadDataToFirebase() async {
@@ -96,7 +99,7 @@ class InputMateri extends StatelessWidget {
                       _referenceMateri, url, textController);
                 },
                 child: Text(
-                  'Select Image Icon',
+                  'Select File',
                   style: TextStyle(color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
@@ -121,7 +124,8 @@ class InputMateri extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => MateriList(babIdData, subBabIdData),
+                      builder: (context) =>
+                          MateriList(kelasId, babIdData, subBabIdData),
                     ),
                   );
                 },

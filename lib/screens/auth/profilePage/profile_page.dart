@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:maths_edu/constants.dart';
+import 'package:maths_edu/main/home/setting_page.dart';
 import 'package:maths_edu/screens/auth/EditAcc/editAccount.dart';
 import 'package:maths_edu/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -70,6 +71,25 @@ class _profilePageState extends State<profilePage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(16),
+          top: Radius.circular(16),
+        )),
+        leading: BackButton(
+          color: Colors.white,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => settingPage()),
+            );
+          },
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
       body: Container(
         height: size.height,
         width: double.infinity,
@@ -153,28 +173,6 @@ class _profilePageState extends State<profilePage> {
                   },
                   child: Text(
                     'EDIT ACCOUNT',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-                    backgroundColor: kPrimaryColor,
-                  ),
-                ),
-              ),
-
-              //Sign out button
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 10),
-                width: size.width * 0.8,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    await signOut();
-                  },
-                  child: Text(
-                    'SIGN OUT',
                     style: TextStyle(color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(

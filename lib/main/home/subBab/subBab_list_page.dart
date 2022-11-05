@@ -3,9 +3,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:maths_edu/constants.dart';
 import 'package:maths_edu/main/home/api.dart';
-import 'package:maths_edu/main/home/bab/bab_list_page.dart';
+import 'package:maths_edu/main/home/dashboard.dart';
 import 'package:maths_edu/main/home/materi/materi_list_page.dart';
 import 'package:maths_edu/main/home/subBab/input_subBab_page.dart';
 import 'package:maths_edu/main/home/subBab/update_subBab_page.dart';
@@ -14,9 +13,10 @@ import 'package:maths_edu/main/home/test/test_list_page.dart';
 import 'package:maths_edu/services/auth.dart';
 
 class SubBabList extends StatefulWidget {
-  SubBabList(this.babIdData, {Key? key}) : super(key: key) {
+  SubBabList(this.kelasId, this.babIdData, {Key? key}) : super(key: key) {
+    _kelasId = kelasId;
     _documentReferenceBab =
-        FirebaseFirestore.instance.collection('bab').doc(babIdData['id']);
+        FirebaseFirestore.instance.collection(kelasId).doc(babIdData['id']);
     _referenceSubBab = _documentReferenceBab.collection('subBab');
     _referenceTest = _documentReferenceBab.collection('test');
     _streamSubBab =
@@ -26,11 +26,13 @@ class SubBabList extends StatefulWidget {
 
     _babIdData = babIdData;
   }
+  String kelasId;
   Map babIdData;
   @override
   State<SubBabList> createState() => _SubBabListState();
 }
 
+late String _kelasId;
 late DocumentReference _documentReferenceBab;
 late DocumentReference _documentReferenceSubBab;
 late DocumentReference _documentReferenceTest;
@@ -76,7 +78,7 @@ class _SubBabListState extends State<SubBabList> {
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return BabList();
+                  return Dashboard();
                 },
               ),
             );
@@ -97,7 +99,7 @@ class _SubBabListState extends State<SubBabList> {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => InputSubBab(_babIdData),
+                  builder: (context) => InputSubBab(_kelasId, _babIdData),
                 ),
               );
             },
@@ -151,7 +153,7 @@ class _SubBabListState extends State<SubBabList> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              MateriList(_babIdData, listItems)),
+                              MateriList(_kelasId, _babIdData, listItems)),
                     );
                   },
                   child: ListTile(
@@ -185,8 +187,8 @@ class _SubBabListState extends State<SubBabList> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        UpdateSubBab(_babIdData, listItems)),
+                                    builder: (context) => UpdateSubBab(
+                                        _kelasId, _babIdData, listItems)),
                               );
                             },
                           ),
@@ -257,7 +259,7 @@ class _SubBabListState extends State<SubBabList> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              TestList(_babIdData, listItems)),
+                              TestList(_kelasId, _babIdData, listItems)),
                     );
                   },
                   child: ListTile(
@@ -291,8 +293,8 @@ class _SubBabListState extends State<SubBabList> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        UpdateTest(_babIdData, listItems)),
+                                    builder: (context) => UpdateTest(
+                                        _kelasId, _babIdData, listItems)),
                               );
                             },
                           ),

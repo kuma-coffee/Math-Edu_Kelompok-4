@@ -6,16 +6,22 @@ import 'package:maths_edu/constants.dart';
 import 'package:maths_edu/main/home/api.dart';
 import 'package:maths_edu/main/home/materi/materi_list_page.dart';
 
+final textController = TextEditingController();
+
 class UpdateMateri extends StatelessWidget {
-  UpdateMateri(this.babIdData, this.subBabIdData, this.materiIdData, {Key? key})
+  UpdateMateri(
+      this.kelasId, this.babIdData, this.subBabIdData, this.materiIdData,
+      {Key? key})
       : super(key: key) {
     _documentReferenceBab =
-        FirebaseFirestore.instance.collection('bab').doc(babIdData['id']);
+        FirebaseFirestore.instance.collection(kelasId).doc(babIdData['id']);
     _documentReferenceSubBab =
         _documentReferenceBab.collection('subBab').doc(subBabIdData['id']);
     _documentReferenceMateri =
         _documentReferenceSubBab.collection('materi').doc(materiIdData['id']);
   }
+
+  String kelasId;
   Map babIdData;
   Map subBabIdData;
   Map materiIdData;
@@ -24,7 +30,6 @@ class UpdateMateri extends StatelessWidget {
   late DocumentReference _documentReferenceMateri;
 
   String url = '';
-  final textController = TextEditingController();
   late int number;
 
   // uploadDataToFirebase() async {
@@ -95,7 +100,7 @@ class UpdateMateri extends StatelessWidget {
                       _documentReferenceMateri, url, textController);
                 },
                 child: Text(
-                  'Select Image Icon',
+                  'Select File',
                   style: TextStyle(color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
@@ -120,7 +125,8 @@ class UpdateMateri extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => MateriList(babIdData, subBabIdData),
+                      builder: (context) =>
+                          MateriList(kelasId, babIdData, subBabIdData),
                     ),
                   );
                 },

@@ -5,15 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:maths_edu/main/home/api.dart';
 import 'package:maths_edu/main/home/materi/input_materi_page.dart';
 import 'package:maths_edu/main/home/materi/update_materi_page.dart';
+import 'package:maths_edu/main/home/materi/viewPDF.dart';
 import 'package:maths_edu/main/home/subBab/subBab_list_page.dart';
-import 'package:maths_edu/main/home/viewPDF.dart';
 
 class MateriList extends StatefulWidget {
-  MateriList(this.babIdData, this.subBabIdData, {Key? key}) : super(key: key) {
+  MateriList(this.kelasId, this.babIdData, this.subBabIdData, {Key? key})
+      : super(key: key) {
+    _kelasId = kelasId;
     _babIdData = babIdData;
     _subBabIdData = subBabIdData;
     _documentReferenceBab =
-        FirebaseFirestore.instance.collection('bab').doc(babIdData['id']);
+        FirebaseFirestore.instance.collection(kelasId).doc(babIdData['id']);
     _documentReferenceSubBab =
         _documentReferenceBab.collection('subBab').doc(subBabIdData['id']);
     _referenceMateri = _documentReferenceSubBab.collection('materi');
@@ -21,12 +23,14 @@ class MateriList extends StatefulWidget {
         _referenceMateri.orderBy('timePost', descending: false).snapshots();
   }
 
+  String kelasId;
   Map babIdData;
   Map subBabIdData;
   @override
   State<MateriList> createState() => _MateriListState();
 }
 
+late String _kelasId;
 late Map _babIdData;
 late Map _subBabIdData;
 late DocumentReference _documentReferenceBab;
@@ -67,7 +71,7 @@ class _MateriListState extends State<MateriList> {
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return SubBabList(_babIdData);
+                  return SubBabList(_kelasId, _babIdData);
                 },
               ),
             );
@@ -79,7 +83,8 @@ class _MateriListState extends State<MateriList> {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => InputMateri(_babIdData, _subBabIdData),
+                  builder: (context) =>
+                      InputMateri(_kelasId, _babIdData, _subBabIdData),
                 ),
               );
             },
@@ -146,6 +151,7 @@ class _MateriListState extends State<MateriList> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => UpdateMateri(
+                                            _kelasId,
                                             _babIdData,
                                             _subBabIdData,
                                             listItems)),
@@ -164,10 +170,6 @@ class _MateriListState extends State<MateriList> {
                                       _documentReferenceSubBab
                                           .collection('materi')
                                           .doc(listItems['id']);
-                                  // _documentSnapshot =
-                                  //     await _documentReference.get().
-                                  // var docID = _documentSnapshot.reference.id;
-
                                   ApiServices services = ApiServices();
                                   services.deletePDFToFirebase(
                                       _documentReferenceMateri);

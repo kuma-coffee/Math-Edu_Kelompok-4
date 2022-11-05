@@ -4,15 +4,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:maths_edu/constants.dart';
 import 'package:maths_edu/main/home/api.dart';
+import 'package:maths_edu/main/home/test/test_list_page.dart';
+
+final nameController = TextEditingController();
+final questionController = TextEditingController();
+final answerAController = TextEditingController();
+final answerBController = TextEditingController();
+final answerCController = TextEditingController();
+final answerDController = TextEditingController();
+final answerEController = TextEditingController();
+final answerController = TextEditingController();
 
 class InputQuestion extends StatelessWidget {
-  InputQuestion(this.babIdData, this.testID, {Key? key}) : super(key: key) {
+  InputQuestion(this.kelasId, this.babIdData, this.testID, {Key? key})
+      : super(key: key) {
     _documentReferenceBab =
-        FirebaseFirestore.instance.collection('bab').doc(babIdData['id']);
+        FirebaseFirestore.instance.collection(kelasId).doc(babIdData['id']);
     _documentReferenceSubBab =
         _documentReferenceBab.collection('test').doc(testID['id']);
     _referenceTestList = _documentReferenceSubBab.collection('testList');
   }
+  String kelasId;
   Map babIdData;
   Map testID;
   late DocumentReference _documentReferenceBab;
@@ -20,14 +32,6 @@ class InputQuestion extends StatelessWidget {
   late CollectionReference _referenceTestList;
 
   String url = '';
-  final nameController = TextEditingController();
-  final questionController = TextEditingController();
-  final answerAController = TextEditingController();
-  final answerBController = TextEditingController();
-  final answerCController = TextEditingController();
-  final answerDController = TextEditingController();
-  final answerEController = TextEditingController();
-  final answerController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -277,6 +281,12 @@ class InputQuestion extends StatelessWidget {
                         answerDController,
                         answerEController,
                         answerController);
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            TestList(kelasId, babIdData, testID),
+                      ),
+                    );
                   },
                   child: Text(
                     'SAVE',

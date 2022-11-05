@@ -10,6 +10,7 @@ import 'package:maths_edu/services/utils.dart';
 
 class QuestionPage extends StatefulWidget {
   QuestionPage(
+      this.kelasId,
       this.name,
       this.question,
       this.answerA,
@@ -22,6 +23,7 @@ class QuestionPage extends StatefulWidget {
       this.questionID,
       {Key? key})
       : super(key: key) {
+    _kelasId = kelasId;
     _name = name;
     _question = question;
     _answerA = answerA;
@@ -45,6 +47,7 @@ class QuestionPage extends StatefulWidget {
     _streamQuestionAnswered = _questionAnsweredRef.snapshots();
   }
 
+  String kelasId;
   var name;
   var question;
   var answerA;
@@ -61,6 +64,7 @@ class QuestionPage extends StatefulWidget {
   State<QuestionPage> createState() => _QuestionPageState();
 }
 
+late String _kelasId;
 late String _name;
 late String _question;
 late String _answerA;
@@ -152,11 +156,6 @@ class _QuestionPageState extends State<QuestionPage> {
     return print('Change answer succesfull');
   }
 
-  Future<void> coba() async {
-    DocumentReference querySnap = _questionAnsweredRef.doc('score');
-    return querySnap.set({'hai': 'hai'});
-  }
-
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -173,8 +172,7 @@ class _QuestionPageState extends State<QuestionPage> {
               builder: (context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   DocumentSnapshot y = snapshot.data;
-                  print(y['score']);
-                  print(y);
+
                   return Scaffold(
                     extendBodyBehindAppBar: true,
                     appBar: AppBar(
@@ -414,7 +412,9 @@ class _QuestionPageState extends State<QuestionPage> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => TestList(
-                                                  _babIdData, _testID)),
+                                                  _kelasId,
+                                                  _babIdData,
+                                                  _testID)),
                                         );
                                       },
                                       child: Text(
@@ -678,8 +678,8 @@ class _QuestionPageState extends State<QuestionPage> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                TestList(_babIdData, _testID)),
+                                            builder: (context) => TestList(
+                                                _kelasId, _babIdData, _testID)),
                                       );
                                     },
                                     child: Text(

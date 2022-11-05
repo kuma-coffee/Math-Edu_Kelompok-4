@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:maths_edu/services/utils.dart';
 
 class ApiServices {
-  uploadDataToFirebase(String url, TextEditingController textController) async {
+  uploadDataToFirebase(
+      String kelasId, String url, TextEditingController textController) async {
     //number = Random().nextInt(10);
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     File pick = File(result!.files.single.path.toString());
@@ -21,7 +22,8 @@ class ApiServices {
     UploadTask task = imgFile.putData(file);
     TaskSnapshot snapshot = await task;
     url = await snapshot.ref.getDownloadURL();
-    CollectionReference babName = FirebaseFirestore.instance.collection('bab');
+    CollectionReference babName =
+        FirebaseFirestore.instance.collection(kelasId);
     await babName.doc().set({
       'id': babName.doc().id,
       'imgUrl': url,
@@ -244,7 +246,8 @@ class ApiServices {
       'timePost': FieldValue.serverTimestamp()
     });
     referenceQuestion.add(inputquestion);
-    return Utils.showSnackBar('Input Sucessfull', Colors.green);
+    //Utils.showSnackBar('Input Sucessfull', Colors.green);
+    return print('Input Successfull');
   }
 
   updateQuestion(
@@ -269,7 +272,8 @@ class ApiServices {
       'timePost': FieldValue.serverTimestamp()
     });
     referenceTestList.update(updatequestion);
-    return Utils.showSnackBar('Input Sucessfull', Colors.green);
+    //return Utils.showSnackBar('Input Sucessfull', Colors.green);
+    return print('Input Successfull');
   }
 
   deleteQuestion(DocumentReference referenceTestList) {

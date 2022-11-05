@@ -3,17 +3,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:maths_edu/constants.dart';
 import 'package:maths_edu/main/home/api.dart';
-import 'package:maths_edu/main/home/bab/bab_list_page.dart';
+import 'package:maths_edu/main/home/dashboard.dart';
+
+final textController = TextEditingController();
 
 class UpdateBab extends StatelessWidget {
-  UpdateBab(this.data, {Key? key}) : super(key: key) {
+  String kelasId;
+
+  UpdateBab(this.kelasId, this.data, {Key? key}) : super(key: key) {
+    _kelasId = kelasId;
     _documentReference =
-        FirebaseFirestore.instance.collection('bab').doc(data['id']);
+        FirebaseFirestore.instance.collection(_kelasId).doc(data['id']);
   }
+
+  late String _kelasId;
   Map data;
   late DocumentReference _documentReference;
   String url = '';
-  final textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +95,7 @@ class UpdateBab extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => BabList(),
+                    builder: (context) => Dashboard(),
                   ),
                 );
               },

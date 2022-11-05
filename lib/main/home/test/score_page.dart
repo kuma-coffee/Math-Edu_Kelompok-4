@@ -9,18 +9,19 @@ import 'package:maths_edu/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class scorePage extends StatefulWidget {
-  scorePage(this.babIdData, this.testID, {super.key}) {
+  scorePage(this.kelasId, this.babIdData, this.testID, {super.key}) {
+    _kelasId = kelasId;
     _babIdData = babIdData;
     _testID = testID;
     _documentReferenceBab =
-        FirebaseFirestore.instance.collection('bab').doc(babIdData['id']);
+        FirebaseFirestore.instance.collection(kelasId).doc(babIdData['id']);
     _documentReferenceTest =
         _documentReferenceBab.collection('test').doc(testID['id']);
     _referenceTestList = _documentReferenceTest.collection('testList');
     _questionAnsweredRef = _documentReferenceTest.collection('${user?.uid}');
     _score = _questionAnsweredRef.doc('score');
   }
-
+  String kelasId;
   Map babIdData;
   Map testID;
   final User? user = Auth().currentUser;
@@ -29,6 +30,7 @@ class scorePage extends StatefulWidget {
   State<scorePage> createState() => _scorePageState();
 }
 
+late String _kelasId;
 late Map _babIdData;
 late Map _testID;
 late DocumentReference _documentReferenceBab;

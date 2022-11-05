@@ -5,19 +5,22 @@ import 'package:maths_edu/constants.dart';
 import 'package:maths_edu/main/home/api.dart';
 import 'package:maths_edu/main/home/subBab/subBab_list_page.dart';
 
+final textController = TextEditingController();
+
 class UpdateTest extends StatelessWidget {
-  UpdateTest(this.babIdData, this.testID, {Key? key}) : super(key: key) {
+  UpdateTest(this.kelasId, this.babIdData, this.testID, {Key? key})
+      : super(key: key) {
     _documentReferenceBab =
-        FirebaseFirestore.instance.collection('bab').doc(babIdData['id']);
+        FirebaseFirestore.instance.collection(kelasId).doc(babIdData['id']);
     _documentReferenceTest =
         _documentReferenceBab.collection('test').doc(testID['id']);
   }
+  String kelasId;
   Map babIdData;
   Map testID;
   late DocumentReference _documentReferenceBab;
   late DocumentReference _documentReferenceTest;
   String url = '';
-  final textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +97,7 @@ class UpdateTest extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => SubBabList(babIdData),
+                      builder: (context) => SubBabList(kelasId, babIdData),
                     ),
                   );
                 },

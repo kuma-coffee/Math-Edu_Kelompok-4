@@ -6,12 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:maths_edu/constants.dart';
 import 'package:maths_edu/main/home/api.dart';
-import 'package:maths_edu/main/home/bab/bab_list_page.dart';
+import 'package:maths_edu/main/home/dashboard.dart';
+
+final textController = TextEditingController();
 
 class InputBab extends StatelessWidget {
-  InputBab({super.key});
+  String kelasId;
+
+  InputBab(this.kelasId, {super.key}) {
+    _kelasId = kelasId;
+  }
   String url = '';
-  final textController = TextEditingController();
+  late String _kelasId;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +65,7 @@ class InputBab extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   ApiServices services = ApiServices();
-                  services.uploadDataToFirebase(url, textController);
+                  services.uploadDataToFirebase(_kelasId, url, textController);
                 },
                 child: Text(
                   'Select Image Icon',
@@ -87,7 +93,7 @@ class InputBab extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => BabList(),
+                      builder: (context) => Dashboard(),
                     ),
                   );
                 },
