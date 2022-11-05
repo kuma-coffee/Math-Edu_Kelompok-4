@@ -1,70 +1,32 @@
 // ignore_for_file: prefer_const_constructors
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:maths_edu/main/home/api.dart';
-import 'package:maths_edu/main/home/materi/createMateri.dart';
-import 'package:maths_edu/main/home/subBab/inputSubBab.dart';
-import 'package:maths_edu/main/home/subBab/updateSubBab.dart';
+import 'package:maths_edu/main/home/bab/input_bab_page.dart';
+import 'package:maths_edu/main/home/bab/update_bab_page.dart';
+import 'package:maths_edu/main/home/subBab/subBab_list_page.dart';
 
-class createSubBab extends StatefulWidget {
-  createSubBab(this.babIdData, {Key? key}) : super(key: key) {
-    _documentReferenceBab =
-        FirebaseFirestore.instance.collection('bab').doc(babIdData['id']);
-    _referenceSubBab = _documentReferenceBab.collection('subBab');
-    _streamSubBab =
-        _referenceSubBab.orderBy('timePost', descending: true).snapshots();
-    _babIdData = babIdData;
-  }
-  Map babIdData;
+class BabList extends StatefulWidget {
+  const BabList({Key? key}) : super(key: key);
+
   @override
-  State<createSubBab> createState() => _createSubBabState();
+  State<BabList> createState() => _BabListState();
 }
 
-// String url = '';
-// final textController = TextEditingController();
-// late int number;
+late DocumentReference _documentReference;
 
-late DocumentReference _documentReferenceBab;
-late DocumentReference _documentReferenceSubBab;
-late CollectionReference _referenceSubBab;
-late Stream<QuerySnapshot> _streamSubBab;
-late Map _babIdData;
-
-// uploadCollectionToFirebase() async {
-//   FilePickerResult? result = await FilePicker.platform.pickFiles();
-//   File pick = File(result!.files.single.path.toString());
-//   var file = pick.readAsBytesSync();
-//   String name = DateTime.now().millisecondsSinceEpoch.toString();
-
-//   var pdfFile =
-//       FirebaseStorage.instance.ref().child(name).child('/.jpg' + '/.png');
-//   UploadTask task = pdfFile.putData(file);
-//   TaskSnapshot snapshot = await task;
-//   url = await snapshot.ref.getDownloadURL();
-
-//   Map<String, dynamic> inputSubBab = ({
-//     'id': _referenceSubBab.doc().id,
-//     'imgUrl': url,
-//     'subBabName': textController.text.trim(),
-//     'timePost': FieldValue.serverTimestamp()
-//   });
-//   _referenceSubBab.add(inputSubBab);
-//   return "Success";
-// }
-
-class _createSubBabState extends State<createSubBab> {
+class _BabListState extends State<BabList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('SUB BAB'),
+        title: Text('BAB'),
         actions: [
           IconButton(
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => InputSubBab(_babIdData),
+                  builder: (context) => InputBab(),
                 ),
               );
             },
@@ -73,7 +35,10 @@ class _createSubBabState extends State<createSubBab> {
         ],
       ),
       body: StreamBuilder(
-          stream: _streamSubBab,
+          stream: FirebaseFirestore.instance
+              .collection('bab')
+              .orderBy('timePost', descending: false)
+              .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
               return Center(child: Text('Error:${snapshot.error}'));
@@ -82,7 +47,7 @@ class _createSubBabState extends State<createSubBab> {
               QuerySnapshot data = snapshot.data!;
               List<QueryDocumentSnapshot> documents = data.docs;
               List<Map> items = documents
-                  .map((e) => {'id': e.id, 'subBabName': e['subBabName']})
+                  .map((e) => {'id': e.id, 'babName': e['babName']})
                   .toList();
               return ListView.builder(
                   itemCount: snapshot.data!.docs.length,
@@ -94,8 +59,7 @@ class _createSubBabState extends State<createSubBab> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  createMateri(_babIdData, listItems)),
+                              builder: (context) => SubBabList(listItems)),
                         );
                       },
                       child: ListTile(
@@ -108,11 +72,12 @@ class _createSubBabState extends State<createSubBab> {
                           ),
                         ),
                         title: Text(
-                          x['subBabName'],
+                          x['babName'],
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
-                            color: Colors.blue,
+                            decoration: TextDecoration.none,
+                            color: Colors.black,
+                            fontSize: 20,
                           ),
                         ),
                         trailing: Wrap(
@@ -128,8 +93,8 @@ class _createSubBabState extends State<createSubBab> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => updateSubBab(
-                                            _babIdData, listItems)),
+                                        builder: (context) =>
+                                            UpdateBab(listItems)),
                                   );
                                 },
                               ),
@@ -141,17 +106,17 @@ class _createSubBabState extends State<createSubBab> {
                                   color: Colors.black,
                                 ),
                                 onPressed: () async {
-                                  _documentReferenceSubBab =
-                                      _documentReferenceBab
-                                          .collection('subBab')
-                                          .doc(listItems['id']);
+                                  _documentReference = FirebaseFirestore
+                                      .instance
+                                      .collection('bab')
+                                      .doc(listItems['id']);
                                   // _documentSnapshot =
                                   //     await _documentReference.get().
                                   // var docID = _documentSnapshot.reference.id;
 
                                   ApiServices services = ApiServices();
-                                  services.deleteCollectionToFirebase(
-                                      _documentReferenceSubBab);
+                                  services
+                                      .deleteDataToFirebase(_documentReference);
                                 },
                               ),
                             ),
