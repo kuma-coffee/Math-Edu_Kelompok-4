@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:maths_edu/main/home/api.dart';
 import 'package:maths_edu/main/home/materi/input_materi_page.dart';
 import 'package:maths_edu/main/home/materi/update_materi_page.dart';
+import 'package:maths_edu/main/home/subBab/subBab_list_page.dart';
 import 'package:maths_edu/main/home/viewPDF.dart';
 
-class createMateri extends StatefulWidget {
-  createMateri(this.babIdData, this.subBabIdData, {Key? key})
-      : super(key: key) {
+class MateriList extends StatefulWidget {
+  MateriList(this.babIdData, this.subBabIdData, {Key? key}) : super(key: key) {
     _babIdData = babIdData;
     _subBabIdData = subBabIdData;
     _documentReferenceBab =
@@ -18,13 +18,13 @@ class createMateri extends StatefulWidget {
         _documentReferenceBab.collection('subBab').doc(subBabIdData['id']);
     _referenceMateri = _documentReferenceSubBab.collection('materi');
     _streamMateri =
-        _referenceMateri.orderBy('timePost', descending: true).snapshots();
+        _referenceMateri.orderBy('timePost', descending: false).snapshots();
   }
 
   Map babIdData;
   Map subBabIdData;
   @override
-  State<createMateri> createState() => _createMateriState();
+  State<MateriList> createState() => _MateriListState();
 }
 
 late Map _babIdData;
@@ -35,7 +35,7 @@ late DocumentReference _documentReferenceMateri;
 late CollectionReference _referenceMateri;
 late Stream<QuerySnapshot> _streamMateri;
 
-class _createMateriState extends State<createMateri> {
+class _MateriListState extends State<MateriList> {
   // String url = '';
   // late int number;
 
@@ -60,6 +60,19 @@ class _createMateriState extends State<createMateri> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(
+          color: Colors.white,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return SubBabList(_babIdData);
+                },
+              ),
+            );
+          },
+        ),
         title: Text('MATERI'),
         actions: [
           IconButton(
@@ -104,13 +117,19 @@ class _createMateriState extends State<createMateri> {
                         );
                       },
                       child: ListTile(
-                        title: Text(
-                          x['name'],
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.none,
-                            color: Colors.black,
-                            fontSize: 20,
+                        leading: SizedBox(
+                          width: 0,
+                        ),
+                        title: Align(
+                          alignment: Alignment(-1.5, 0),
+                          child: Text(
+                            x['name'],
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.none,
+                              color: Colors.black,
+                              fontSize: 20,
+                            ),
                           ),
                         ),
                         trailing: Wrap(

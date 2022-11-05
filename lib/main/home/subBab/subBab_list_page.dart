@@ -1,19 +1,29 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:maths_edu/constants.dart';
 import 'package:maths_edu/main/home/api.dart';
+import 'package:maths_edu/main/home/bab/bab_list_page.dart';
 import 'package:maths_edu/main/home/materi/materi_list_page.dart';
 import 'package:maths_edu/main/home/subBab/input_subBab_page.dart';
 import 'package:maths_edu/main/home/subBab/update_subBab_page.dart';
+import 'package:maths_edu/main/home/subBab/update_test_page.dart';
+import 'package:maths_edu/main/home/test/test_list_page.dart';
+import 'package:maths_edu/services/auth.dart';
 
 class SubBabList extends StatefulWidget {
   SubBabList(this.babIdData, {Key? key}) : super(key: key) {
     _documentReferenceBab =
         FirebaseFirestore.instance.collection('bab').doc(babIdData['id']);
     _referenceSubBab = _documentReferenceBab.collection('subBab');
+    _referenceTest = _documentReferenceBab.collection('test');
     _streamSubBab =
-        _referenceSubBab.orderBy('timePost', descending: true).snapshots();
+        _referenceSubBab.orderBy('timePost', descending: false).snapshots();
+    _streamTest =
+        _referenceTest.orderBy('timePost', descending: false).snapshots();
+
     _babIdData = babIdData;
   }
   Map babIdData;
@@ -21,14 +31,13 @@ class SubBabList extends StatefulWidget {
   State<SubBabList> createState() => _SubBabListState();
 }
 
-// String url = '';
-// final textController = TextEditingController();
-// late int number;
-
 late DocumentReference _documentReferenceBab;
 late DocumentReference _documentReferenceSubBab;
+late DocumentReference _documentReferenceTest;
 late CollectionReference _referenceSubBab;
+late CollectionReference _referenceTest;
 late Stream<QuerySnapshot> _streamSubBab;
+late Stream<QuerySnapshot> _streamTest;
 late Map _babIdData;
 
 // uploadCollectionToFirebase() async {
@@ -54,12 +63,36 @@ late Map _babIdData;
 // }
 
 class _SubBabListState extends State<SubBabList> {
+  final User? user = Auth().currentUser;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(
+          color: Colors.white,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return BabList();
+                },
+              ),
+            );
+          },
+        ),
         title: Text('SUB BAB'),
         actions: [
+          IconButton(
+            onPressed: () {
+              ApiServices services = ApiServices();
+              services.inputTest(_referenceTest);
+            },
+            icon: Icon(
+              Icons.add_circle_outlined,
+            ),
+          ),
           IconButton(
             onPressed: () {
               Navigator.of(context).push(
@@ -72,100 +105,225 @@ class _SubBabListState extends State<SubBabList> {
           ),
         ],
       ),
-      body: StreamBuilder(
-          stream: _streamSubBab,
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError) {
-              return Center(child: Text('Error:${snapshot.error}'));
-            }
-            if (snapshot.hasData) {
-              QuerySnapshot data = snapshot.data!;
-              List<QueryDocumentSnapshot> documents = data.docs;
-              List<Map> items = documents
-                  .map((e) => {'id': e.id, 'subBabName': e['subBabName']})
-                  .toList();
-              return ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, i) {
-                    QueryDocumentSnapshot x = snapshot.data!.docs[i];
-                    Map listItems = items[i];
-                    return InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  createMateri(_babIdData, listItems)),
-                        );
-                      },
-                      child: ListTile(
-                        leading: ClipOval(
-                          child: Image.network(
-                            x['imgUrl'],
-                            width: 52,
-                            height: 52,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        title: Text(
-                          x['subBabName'],
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.none,
-                            color: Colors.black,
-                            fontSize: 20,
-                          ),
-                        ),
-                        trailing: Wrap(
-                          spacing: 12,
-                          children: <Widget>[
-                            Container(
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.create,
-                                  color: Colors.black,
-                                ),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => UpdateSubBab(
-                                            _babIdData, listItems)),
-                                  );
-                                },
-                              ),
-                            ),
-                            Container(
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.delete,
-                                  color: Colors.black,
-                                ),
-                                onPressed: () async {
-                                  _documentReferenceSubBab =
-                                      _documentReferenceBab
-                                          .collection('subBab')
-                                          .doc(listItems['id']);
-                                  // _documentSnapshot =
-                                  //     await _documentReference.get().
-                                  // var docID = _documentSnapshot.reference.id;
+      body: Column(
+        children: [
+          //Test List
+          Visibility(
+            child: Flexible(
+              child: SizedBox(
+                height: 60,
+                child: testList(),
+              ),
+            ),
+            visible: testList() == null ? false : true,
+          ),
 
-                                  ApiServices services = ApiServices();
-                                  services.deleteCollectionToFirebase(
-                                      _documentReferenceSubBab);
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+          //Sub Bab List
+          Expanded(
+            child: subBabList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  subBabList() {
+    return StreamBuilder(
+      stream: _streamSubBab,
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Center(child: Text('Error:${snapshot.error}'));
+        }
+        if (snapshot.hasData) {
+          QuerySnapshot data = snapshot.data!;
+          List<QueryDocumentSnapshot> documents = data.docs;
+          List<Map> items = documents
+              .map((e) => {'id': e.id, 'subBabName': e['subBabName']})
+              .toList();
+          return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, i) {
+                QueryDocumentSnapshot x = snapshot.data!.docs[i];
+                Map listItems = items[i];
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              MateriList(_babIdData, listItems)),
                     );
-                  });
-            }
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }),
+                  },
+                  child: ListTile(
+                    leading: ClipOval(
+                      child: Image.network(
+                        x['imgUrl'],
+                        width: 52,
+                        height: 52,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    title: Text(
+                      x['subBabName'],
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.none,
+                        color: Colors.black,
+                        fontSize: 20,
+                      ),
+                    ),
+                    trailing: Wrap(
+                      spacing: 12,
+                      children: <Widget>[
+                        Container(
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.create,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        UpdateSubBab(_babIdData, listItems)),
+                              );
+                            },
+                          ),
+                        ),
+                        Container(
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.delete,
+                              color: Colors.black,
+                            ),
+                            onPressed: () async {
+                              _documentReferenceSubBab = _documentReferenceBab
+                                  .collection('subBab')
+                                  .doc(listItems['id']);
+                              // _documentSnapshot =
+                              //     await _documentReference.get().
+                              // var docID = _documentSnapshot.reference.id;
+
+                              ApiServices services = ApiServices();
+                              services.deleteCollectionToFirebase(
+                                  _documentReferenceSubBab);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              });
+        }
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+  }
+
+  testList() {
+    return StreamBuilder(
+      stream: _streamTest,
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Center(child: Text('Error:${snapshot.error}'));
+        }
+        if (snapshot.hasData) {
+          QuerySnapshot data = snapshot.data!;
+          List<QueryDocumentSnapshot> documents = data.docs;
+          List<Map> items = documents
+              .map((e) => {'id': e.id, 'testName': e['testName']})
+              .toList();
+          return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, i) {
+                QueryDocumentSnapshot x = snapshot.data!.docs[i];
+                Map listItems = items[i];
+                return InkWell(
+                  onTap: () {
+                    DocumentReference _referenceTestID =
+                        _referenceTest.doc(listItems['id']);
+                    CollectionReference _referenceQuestionAnswered =
+                        _referenceTestID.collection('${user?.uid}');
+                    ApiServices services = ApiServices();
+                    services.questionAnswered(
+                      _referenceQuestionAnswered,
+                      '${user?.uid}',
+                    );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              TestList(_babIdData, listItems)),
+                    );
+                  },
+                  child: ListTile(
+                    leading: ClipOval(
+                      child: Image.network(
+                        x['imgUrl'],
+                        width: 52,
+                        height: 52,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    title: Text(
+                      x['testName'],
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.none,
+                        color: Colors.black,
+                        fontSize: 20,
+                      ),
+                    ),
+                    trailing: Wrap(
+                      spacing: 12,
+                      children: <Widget>[
+                        Container(
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.create,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        UpdateTest(_babIdData, listItems)),
+                              );
+                            },
+                          ),
+                        ),
+                        Container(
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.delete,
+                              color: Colors.black,
+                            ),
+                            onPressed: () async {
+                              _documentReferenceTest = _documentReferenceBab
+                                  .collection('test')
+                                  .doc(listItems['id']);
+                              ApiServices services = ApiServices();
+                              services.deleteCollectionTest(
+                                _documentReferenceTest,
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              });
+        }
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
   }
 }

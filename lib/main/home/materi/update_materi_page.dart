@@ -120,8 +120,7 @@ class UpdateMateri extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) =>
-                          createMateri(babIdData, subBabIdData),
+                      builder: (context) => MateriList(babIdData, subBabIdData),
                     ),
                   );
                 },

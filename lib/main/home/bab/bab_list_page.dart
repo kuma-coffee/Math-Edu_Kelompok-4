@@ -37,7 +37,7 @@ class _BabListState extends State<BabList> {
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('bab')
-              .orderBy('timePost', descending: true)
+              .orderBy('timePost', descending: false)
               .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {

@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:maths_edu/main/home/bab/createBab.dart';
+import 'package:maths_edu/main/home/bab/bab_list_page.dart';
+import 'package:maths_edu/main/home/test/question_page.dart';
+import 'package:maths_edu/main/home/test/test_list_page.dart';
 import 'package:maths_edu/screens/chat/chat_page.dart';
 import 'package:maths_edu/screens/wrapper.dart';
 import 'package:maths_edu/services/auth.dart';
@@ -27,7 +29,7 @@ class MyApp extends StatelessWidget {
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(fontFamily: 'ZenMaruGothic'),
-        home: const ChatPage(),
+        home: const BabList(),
       ),
     );
   }
