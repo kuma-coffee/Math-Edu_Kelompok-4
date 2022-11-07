@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:maths_edu/main/home/dashboard.dart';
+import 'package:maths_edu/screens/auth/SignInPage/sign_in_page.dart';
 import 'package:maths_edu/screens/auth/profilePage/profile_page.dart';
 import 'package:maths_edu/services/auth.dart';
 
@@ -47,8 +48,12 @@ class _settingPageState extends State<settingPage> {
         ListTile(
           leading: Icon(Icons.exit_to_app_rounded),
           title: Text('Sign Out'),
-          onTap: () async {
-            await signOut();
+          onTap: () {
+            signOut();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SignInPage()),
+            );
           },
         ),
       ]),
