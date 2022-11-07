@@ -8,7 +8,17 @@ import 'package:maths_edu/main/home/setting_page.dart';
 import 'package:maths_edu/screens/chat/chat_page.dart';
 import 'package:maths_edu/services/auth.dart';
 
-class Dashboard extends StatelessWidget {
+class Dashboard extends StatefulWidget {
+  const Dashboard({super.key});
+
+  @override
+  State<Dashboard> createState() => _DashboardState();
+}
+
+class _DashboardState extends State<Dashboard> {
+  final User? user = Auth().currentUser;
+  String adminUID = 'Si943Tqb6ePUaIQVrasOeH7vV6i1';
+
   List<Tab> myTab = [
     Tab(
       text: "Kelas 7",
@@ -23,8 +33,6 @@ class Dashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final User? user = Auth().currentUser;
-
     return MaterialApp(
       home: DefaultTabController(
         initialIndex: 1,
@@ -53,7 +61,7 @@ class Dashboard extends StatelessWidget {
                   currentAccountPicture: CircleAvatar(
                     child: ClipOval(
                       child: Material(
-                        color: Colors.transparent,
+                        color: Colors.white,
                         child: Ink.image(
                           image:
                               NetworkImage(user?.photoURL ?? 'User PhotoURL'),
@@ -75,10 +83,18 @@ class Dashboard extends StatelessWidget {
                     );
                   },
                 ),
-                ListTile(
-                  leading: Icon(Icons.download),
-                  title: Text('Download'),
-                ),
+                // ListTile(
+                //   leading: Icon(Icons.download),
+                //   title: Text('Download'),
+                //   onTap: () {
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //         builder: (context) => Coba(),
+                //       ),
+                //     );
+                //   },
+                // ),
                 ListTile(
                   leading: Icon(Icons.settings),
                   title: Text('Setting'),
@@ -100,7 +116,7 @@ class Dashboard extends StatelessWidget {
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      return BabList('Kelas7');
+                      return BabList(adminUID, 'Kelas7');
                     }
                     return Container();
                   }),
@@ -112,7 +128,7 @@ class Dashboard extends StatelessWidget {
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      return BabList('Kelas8');
+                      return BabList(adminUID, 'Kelas8');
                     }
                     return Container();
                   }),
@@ -124,7 +140,7 @@ class Dashboard extends StatelessWidget {
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      return BabList('Kelas9');
+                      return BabList(adminUID, 'Kelas9');
                     }
                     return Container();
                   }),

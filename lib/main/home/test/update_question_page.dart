@@ -18,7 +18,8 @@ final answerEController = TextEditingController();
 final answerController = TextEditingController();
 
 class UpdateQuestion extends StatelessWidget {
-  UpdateQuestion(this.kelasId, this.babIdData, this.testID, this.testListID,
+  UpdateQuestion(
+      this.adminUID, this.kelasId, this.babIdData, this.testID, this.testListID,
       {Key? key})
       : super(key: key) {
     _documentReferenceBab =
@@ -28,6 +29,7 @@ class UpdateQuestion extends StatelessWidget {
     _documentReferenceTestList =
         _documentReferenceSubBab.collection('testList').doc(testListID['id']);
   }
+  String adminUID;
   String kelasId;
   Map babIdData;
   Map testID;
@@ -289,7 +291,7 @@ class UpdateQuestion extends StatelessWidget {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) =>
-                            TestList(kelasId, babIdData, testID),
+                            TestList(adminUID, kelasId, babIdData, testID),
                       ),
                     );
                   },

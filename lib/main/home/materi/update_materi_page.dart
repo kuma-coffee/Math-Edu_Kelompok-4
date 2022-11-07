@@ -9,8 +9,8 @@ import 'package:maths_edu/main/home/materi/materi_list_page.dart';
 final textController = TextEditingController();
 
 class UpdateMateri extends StatelessWidget {
-  UpdateMateri(
-      this.kelasId, this.babIdData, this.subBabIdData, this.materiIdData,
+  UpdateMateri(this.adminUID, this.kelasId, this.babIdData, this.subBabIdData,
+      this.materiIdData,
       {Key? key})
       : super(key: key) {
     _documentReferenceBab =
@@ -20,7 +20,7 @@ class UpdateMateri extends StatelessWidget {
     _documentReferenceMateri =
         _documentReferenceSubBab.collection('materi').doc(materiIdData['id']);
   }
-
+  String adminUID;
   String kelasId;
   Map babIdData;
   Map subBabIdData;
@@ -125,8 +125,8 @@ class UpdateMateri extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) =>
-                          MateriList(kelasId, babIdData, subBabIdData),
+                      builder: (context) => MateriList(
+                          adminUID, kelasId, babIdData, subBabIdData),
                     ),
                   );
                 },

@@ -8,7 +8,8 @@ import 'package:maths_edu/main/home/subBab/subBab_list_page.dart';
 final textController = TextEditingController();
 
 class UpdateSubBab extends StatelessWidget {
-  UpdateSubBab(this.kelasId, this.babIdData, this.subBabIdData, {Key? key})
+  UpdateSubBab(this.adminUID, this.kelasId, this.babIdData, this.subBabIdData,
+      {Key? key})
       : super(key: key) {
     _documentReferenceBab =
         FirebaseFirestore.instance.collection(kelasId).doc(babIdData['id']);
@@ -21,6 +22,7 @@ class UpdateSubBab extends StatelessWidget {
   late DocumentReference _documentReferenceBab;
   late DocumentReference _documentReferenceSubBab;
   String url = '';
+  String adminUID;
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +99,8 @@ class UpdateSubBab extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => SubBabList(kelasId, babIdData),
+                      builder: (context) =>
+                          SubBabList(adminUID, kelasId, babIdData),
                     ),
                   );
                 },

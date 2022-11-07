@@ -19,6 +19,7 @@ class profilePage extends StatefulWidget {
 class _profilePageState extends State<profilePage> {
   final User? user = Auth().currentUser;
 
+  @override
   void initState() {
     super.initState();
     updateUsername();

@@ -1,12 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:maths_edu/constants.dart';
+import 'package:maths_edu/main/home/dashboard.dart';
 import 'package:maths_edu/screens/auth/SignInPage/sign_in_page.dart';
-import 'package:maths_edu/screens/auth/profilePage/profile_page.dart';
+import 'package:maths_edu/services/auth.dart';
 import 'package:maths_edu/services/utils.dart';
 
 class VerifyEmailPage extends StatefulWidget {
@@ -17,6 +19,7 @@ class VerifyEmailPage extends StatefulWidget {
 }
 
 class _VerifyEmailPageState extends State<VerifyEmailPage> {
+  final User? user = Auth().currentUser;
   bool isEmailVerified = false;
   bool canResendEmail = false;
   Timer? timer;
@@ -46,6 +49,8 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
     super.initState();
 
     isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+    updateUsername();
+    updateProfileImg();
 
     if (!isEmailVerified) {
       sendVerificationEmail();
@@ -87,8 +92,29 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
     }
   }
 
+  Future updateUsername() async {
+    final userProfile = FirebaseFirestore.instance
+        .collection('userProfile')
+        .where('uid', isEqualTo: user?.uid)
+        .snapshots()
+        .listen((data) => data.docs
+            .forEach((doc) => user?.updateDisplayName(doc['username'])));
+    return userProfile;
+  }
+
+  Future updateProfileImg() async {
+    final userProfile = FirebaseFirestore.instance
+        .collection('userProfile')
+        .where('uid', isEqualTo: user?.uid)
+        .snapshots()
+        .listen((data) => data.docs
+            .forEach((doc) => user?.updatePhotoURL(doc['profileImg'])));
+    //return print(userProfile.toString());
+    return userProfile;
+  }
+
   Widget build(BuildContext context) => isEmailVerified
-      ? profilePage()
+      ? Dashboard()
       : Scaffold(
           extendBodyBehindAppBar: true,
           appBar: AppBar(

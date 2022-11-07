@@ -10,6 +10,7 @@ import 'package:maths_edu/services/utils.dart';
 
 class QuestionPage extends StatefulWidget {
   QuestionPage(
+      this.adminUID,
       this.kelasId,
       this.name,
       this.question,
@@ -47,6 +48,7 @@ class QuestionPage extends StatefulWidget {
     _streamQuestionAnswered = _questionAnsweredRef.snapshots();
   }
 
+  String adminUID;
   String kelasId;
   var name;
   var question;
@@ -64,6 +66,7 @@ class QuestionPage extends StatefulWidget {
   State<QuestionPage> createState() => _QuestionPageState();
 }
 
+late String _adminUID;
 late String _kelasId;
 late String _name;
 late String _question;
@@ -412,6 +415,7 @@ class _QuestionPageState extends State<QuestionPage> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => TestList(
+                                                  _adminUID,
                                                   _kelasId,
                                                   _babIdData,
                                                   _testID)),
@@ -679,7 +683,10 @@ class _QuestionPageState extends State<QuestionPage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => TestList(
-                                                _kelasId, _babIdData, _testID)),
+                                                _adminUID,
+                                                _kelasId,
+                                                _babIdData,
+                                                _testID)),
                                       );
                                     },
                                     child: Text(

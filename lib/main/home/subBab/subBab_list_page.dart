@@ -13,7 +13,9 @@ import 'package:maths_edu/main/home/test/test_list_page.dart';
 import 'package:maths_edu/services/auth.dart';
 
 class SubBabList extends StatefulWidget {
-  SubBabList(this.kelasId, this.babIdData, {Key? key}) : super(key: key) {
+  SubBabList(this.adminUID, this.kelasId, this.babIdData, {Key? key})
+      : super(key: key) {
+    _adminUID = adminUID;
     _kelasId = kelasId;
     _documentReferenceBab =
         FirebaseFirestore.instance.collection(kelasId).doc(babIdData['id']);
@@ -26,12 +28,14 @@ class SubBabList extends StatefulWidget {
 
     _babIdData = babIdData;
   }
+  String adminUID;
   String kelasId;
   Map babIdData;
   @override
   State<SubBabList> createState() => _SubBabListState();
 }
 
+late String _adminUID;
 late String _kelasId;
 late DocumentReference _documentReferenceBab;
 late DocumentReference _documentReferenceSubBab;
@@ -85,27 +89,30 @@ class _SubBabListState extends State<SubBabList> {
           },
         ),
         title: Text('SUB BAB'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              ApiServices services = ApiServices();
-              services.inputTest(_referenceTest);
-            },
-            icon: Icon(
-              Icons.add_circle_outlined,
-            ),
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => InputSubBab(_kelasId, _babIdData),
+        actions: _adminUID == '${user?.uid}'
+            ? [
+                IconButton(
+                  onPressed: () {
+                    ApiServices services = ApiServices();
+                    services.inputTest(_referenceTest);
+                  },
+                  icon: Icon(
+                    Icons.add_circle_outlined,
+                  ),
                 ),
-              );
-            },
-            icon: Icon(Icons.add),
-          ),
-        ],
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            InputSubBab(_adminUID, _kelasId, _babIdData),
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.add),
+                ),
+              ]
+            : null,
       ),
       body: Column(
         children: [
@@ -152,8 +159,8 @@ class _SubBabListState extends State<SubBabList> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              MateriList(_kelasId, _babIdData, listItems)),
+                          builder: (context) => MateriList(
+                              _adminUID, _kelasId, _babIdData, listItems)),
                     );
                   },
                   child: ListTile(
@@ -174,47 +181,53 @@ class _SubBabListState extends State<SubBabList> {
                         fontSize: 20,
                       ),
                     ),
-                    trailing: Wrap(
-                      spacing: 12,
-                      children: <Widget>[
-                        Container(
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.create,
-                              color: Colors.black,
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => UpdateSubBab(
-                                        _kelasId, _babIdData, listItems)),
-                              );
-                            },
-                          ),
-                        ),
-                        Container(
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.delete,
-                              color: Colors.black,
-                            ),
-                            onPressed: () async {
-                              _documentReferenceSubBab = _documentReferenceBab
-                                  .collection('subBab')
-                                  .doc(listItems['id']);
-                              // _documentSnapshot =
-                              //     await _documentReference.get().
-                              // var docID = _documentSnapshot.reference.id;
+                    trailing: _adminUID == '${user?.uid}'
+                        ? Wrap(
+                            spacing: 12,
+                            children: <Widget>[
+                              Container(
+                                child: IconButton(
+                                  icon: const Icon(
+                                    Icons.create,
+                                    color: Colors.black,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => UpdateSubBab(
+                                              _adminUID,
+                                              _kelasId,
+                                              _babIdData,
+                                              listItems)),
+                                    );
+                                  },
+                                ),
+                              ),
+                              Container(
+                                child: IconButton(
+                                  icon: const Icon(
+                                    Icons.delete,
+                                    color: Colors.black,
+                                  ),
+                                  onPressed: () async {
+                                    _documentReferenceSubBab =
+                                        _documentReferenceBab
+                                            .collection('subBab')
+                                            .doc(listItems['id']);
+                                    // _documentSnapshot =
+                                    //     await _documentReference.get().
+                                    // var docID = _documentSnapshot.reference.id;
 
-                              ApiServices services = ApiServices();
-                              services.deleteCollectionToFirebase(
-                                  _documentReferenceSubBab);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
+                                    ApiServices services = ApiServices();
+                                    services.deleteCollectionToFirebase(
+                                        _documentReferenceSubBab);
+                                  },
+                                ),
+                              ),
+                            ],
+                          )
+                        : null,
                   ),
                 );
               });
@@ -258,8 +271,8 @@ class _SubBabListState extends State<SubBabList> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              TestList(_kelasId, _babIdData, listItems)),
+                          builder: (context) => TestList(
+                              _adminUID, _kelasId, _babIdData, listItems)),
                     );
                   },
                   child: ListTile(
@@ -280,44 +293,50 @@ class _SubBabListState extends State<SubBabList> {
                         fontSize: 20,
                       ),
                     ),
-                    trailing: Wrap(
-                      spacing: 12,
-                      children: <Widget>[
-                        Container(
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.create,
-                              color: Colors.black,
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => UpdateTest(
-                                        _kelasId, _babIdData, listItems)),
-                              );
-                            },
-                          ),
-                        ),
-                        Container(
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.delete,
-                              color: Colors.black,
-                            ),
-                            onPressed: () async {
-                              _documentReferenceTest = _documentReferenceBab
-                                  .collection('test')
-                                  .doc(listItems['id']);
-                              ApiServices services = ApiServices();
-                              services.deleteCollectionTest(
-                                _documentReferenceTest,
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
+                    trailing: _adminUID == '${user?.uid}'
+                        ? Wrap(
+                            spacing: 12,
+                            children: <Widget>[
+                              Container(
+                                child: IconButton(
+                                  icon: const Icon(
+                                    Icons.create,
+                                    color: Colors.black,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => UpdateTest(
+                                              _adminUID,
+                                              _kelasId,
+                                              _babIdData,
+                                              listItems)),
+                                    );
+                                  },
+                                ),
+                              ),
+                              Container(
+                                child: IconButton(
+                                  icon: const Icon(
+                                    Icons.delete,
+                                    color: Colors.black,
+                                  ),
+                                  onPressed: () async {
+                                    _documentReferenceTest =
+                                        _documentReferenceBab
+                                            .collection('test')
+                                            .doc(listItems['id']);
+                                    ApiServices services = ApiServices();
+                                    services.deleteCollectionTest(
+                                      _documentReferenceTest,
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          )
+                        : null,
                   ),
                 );
               });

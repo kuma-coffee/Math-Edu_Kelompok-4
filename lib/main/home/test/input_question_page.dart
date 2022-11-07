@@ -16,7 +16,8 @@ final answerEController = TextEditingController();
 final answerController = TextEditingController();
 
 class InputQuestion extends StatelessWidget {
-  InputQuestion(this.kelasId, this.babIdData, this.testID, {Key? key})
+  InputQuestion(this.adminUID, this.kelasId, this.babIdData, this.testID,
+      {Key? key})
       : super(key: key) {
     _documentReferenceBab =
         FirebaseFirestore.instance.collection(kelasId).doc(babIdData['id']);
@@ -24,6 +25,7 @@ class InputQuestion extends StatelessWidget {
         _documentReferenceBab.collection('test').doc(testID['id']);
     _referenceTestList = _documentReferenceSubBab.collection('testList');
   }
+  String adminUID;
   String kelasId;
   Map babIdData;
   Map testID;
@@ -284,7 +286,7 @@ class InputQuestion extends StatelessWidget {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) =>
-                            TestList(kelasId, babIdData, testID),
+                            TestList(adminUID, kelasId, babIdData, testID),
                       ),
                     );
                   },

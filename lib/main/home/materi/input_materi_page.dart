@@ -13,7 +13,8 @@ import 'package:maths_edu/main/home/materi/materi_list_page.dart';
 final textController = TextEditingController();
 
 class InputMateri extends StatelessWidget {
-  InputMateri(this.kelasId, this.babIdData, this.subBabIdData, {Key? key})
+  InputMateri(this.adminUID, this.kelasId, this.babIdData, this.subBabIdData,
+      {Key? key})
       : super(key: key) {
     _documentReferenceBab =
         FirebaseFirestore.instance.collection(kelasId).doc(babIdData['id']);
@@ -21,6 +22,8 @@ class InputMateri extends StatelessWidget {
         _documentReferenceBab.collection('subBab').doc(subBabIdData['id']);
     _referenceMateri = _documentReferenceSubBab.collection('materi');
   }
+
+  String adminUID;
   String kelasId;
   Map babIdData;
   Map subBabIdData;
@@ -124,8 +127,8 @@ class InputMateri extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) =>
-                          MateriList(kelasId, babIdData, subBabIdData),
+                      builder: (context) => MateriList(
+                          adminUID, kelasId, babIdData, subBabIdData),
                     ),
                   );
                 },

@@ -8,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:maths_edu/constants.dart';
 import 'package:maths_edu/main.dart';
 import 'package:maths_edu/screens/auth/SignInPage/sign_in_page.dart';
+import 'package:maths_edu/screens/auth/VerifyEmail/verify_email_page.dart';
 import 'package:maths_edu/screens/components/or_divider.dart';
 import 'package:maths_edu/services/auth.dart';
 import 'package:maths_edu/services/utils.dart';
@@ -307,13 +308,14 @@ class _SignUpPageState extends State<SignUpPage> {
       );
       CollectionReference userProfile =
           FirebaseFirestore.instance.collection('userProfile');
-      await userProfile.doc().set({
+      await userProfile.doc(Auth().currentUser?.uid).set({
         'uid': Auth().currentUser?.uid,
         'profileImg':
             'https://firebasestorage.googleapis.com/v0/b/mathedu-kelompok4.appspot.com/o/userDefaultLogo.png?alt=media&token=a2722a2a-0199-4841-9b6f-18928d8b06a2',
         'username': usernameController.text.trim(),
         'email': emailController.text.trim(),
         'password': passwordController.text.trim(),
+        'admin': false,
       });
       // CollectionReference userProfile =
       //     FirebaseFirestore.instance.collection('userProfile');

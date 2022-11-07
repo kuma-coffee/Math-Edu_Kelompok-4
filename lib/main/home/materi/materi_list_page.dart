@@ -1,16 +1,20 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:maths_edu/main/home/api.dart';
 import 'package:maths_edu/main/home/materi/input_materi_page.dart';
 import 'package:maths_edu/main/home/materi/update_materi_page.dart';
 import 'package:maths_edu/main/home/materi/viewPDF.dart';
 import 'package:maths_edu/main/home/subBab/subBab_list_page.dart';
+import 'package:maths_edu/services/auth.dart';
 
 class MateriList extends StatefulWidget {
-  MateriList(this.kelasId, this.babIdData, this.subBabIdData, {Key? key})
+  MateriList(this.adminUID, this.kelasId, this.babIdData, this.subBabIdData,
+      {Key? key})
       : super(key: key) {
+    _adminUID = adminUID;
     _kelasId = kelasId;
     _babIdData = babIdData;
     _subBabIdData = subBabIdData;
@@ -23,6 +27,7 @@ class MateriList extends StatefulWidget {
         _referenceMateri.orderBy('timePost', descending: false).snapshots();
   }
 
+  String adminUID;
   String kelasId;
   Map babIdData;
   Map subBabIdData;
@@ -30,6 +35,7 @@ class MateriList extends StatefulWidget {
   State<MateriList> createState() => _MateriListState();
 }
 
+late String _adminUID;
 late String _kelasId;
 late Map _babIdData;
 late Map _subBabIdData;
@@ -40,26 +46,7 @@ late CollectionReference _referenceMateri;
 late Stream<QuerySnapshot> _streamMateri;
 
 class _MateriListState extends State<MateriList> {
-  // String url = '';
-  // late int number;
-
-  // uploadDataToFirebase() async {
-  //   number = Random().nextInt(10);
-  //   FilePickerResult? result = await FilePicker.platform.pickFiles();
-  //   File pick = File(result!.files.single.path.toString());
-  //   var file = pick.readAsBytesSync();
-  //   String name = DateTime.now().millisecondsSinceEpoch.toString();
-
-  //   var pdfFile = FirebaseStorage.instance.ref().child(name).child('/.pdf');
-  //   UploadTask task = pdfFile.putData(file);
-  //   TaskSnapshot snapshot = await task;
-  //   url = await snapshot.ref.getDownloadURL();
-  //   await FirebaseFirestore.instance.collection('file').doc().set({
-  //     'fileUrl': url,
-  //     'name': 'Book' + number.toString(),
-  //   });
-  // }
-
+  final User? user = Auth().currentUser;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,26 +58,28 @@ class _MateriListState extends State<MateriList> {
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return SubBabList(_kelasId, _babIdData);
+                  return SubBabList(_adminUID, _kelasId, _babIdData);
                 },
               ),
             );
           },
         ),
         title: Text('MATERI'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) =>
-                      InputMateri(_kelasId, _babIdData, _subBabIdData),
+        actions: _adminUID == '${user?.uid}'
+            ? [
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => InputMateri(
+                            _adminUID, _kelasId, _babIdData, _subBabIdData),
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.add),
                 ),
-              );
-            },
-            icon: Icon(Icons.add),
-          ),
-        ],
+              ]
+            : null,
       ),
       body: StreamBuilder(
           stream: _streamMateri,
@@ -121,62 +110,69 @@ class _MateriListState extends State<MateriList> {
                           ),
                         );
                       },
-                      child: ListTile(
-                        leading: SizedBox(
-                          width: 0,
-                        ),
-                        title: Align(
-                          alignment: Alignment(-1.5, 0),
-                          child: Text(
-                            x['name'],
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.none,
-                              color: Colors.black,
-                              fontSize: 20,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: ListTile(
+                          leading: SizedBox(
+                            width: 0,
+                          ),
+                          title: Align(
+                            alignment: Alignment(-1.5, 0),
+                            child: Text(
+                              x['name'],
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.none,
+                                color: Colors.black,
+                                fontSize: 20,
+                              ),
                             ),
                           ),
-                        ),
-                        trailing: Wrap(
-                          spacing: 12,
-                          children: <Widget>[
-                            Container(
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.create,
-                                  color: Colors.black,
-                                ),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => UpdateMateri(
-                                            _kelasId,
-                                            _babIdData,
-                                            _subBabIdData,
-                                            listItems)),
-                                  );
-                                },
-                              ),
-                            ),
-                            Container(
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.delete,
-                                  color: Colors.black,
-                                ),
-                                onPressed: () async {
-                                  _documentReferenceMateri =
-                                      _documentReferenceSubBab
-                                          .collection('materi')
-                                          .doc(listItems['id']);
-                                  ApiServices services = ApiServices();
-                                  services.deletePDFToFirebase(
-                                      _documentReferenceMateri);
-                                },
-                              ),
-                            ),
-                          ],
+                          trailing: _adminUID == '${user?.uid}'
+                              ? Wrap(
+                                  spacing: 12,
+                                  children: <Widget>[
+                                    Container(
+                                      child: IconButton(
+                                        icon: const Icon(
+                                          Icons.create,
+                                          color: Colors.black,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    UpdateMateri(
+                                                        _adminUID,
+                                                        _kelasId,
+                                                        _babIdData,
+                                                        _subBabIdData,
+                                                        listItems)),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    Container(
+                                      child: IconButton(
+                                        icon: const Icon(
+                                          Icons.delete,
+                                          color: Colors.black,
+                                        ),
+                                        onPressed: () async {
+                                          _documentReferenceMateri =
+                                              _documentReferenceSubBab
+                                                  .collection('materi')
+                                                  .doc(listItems['id']);
+                                          ApiServices services = ApiServices();
+                                          services.deletePDFToFirebase(
+                                              _documentReferenceMateri);
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : null,
                         ),
                       ),
                     );

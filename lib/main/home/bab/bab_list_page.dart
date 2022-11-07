@@ -1,15 +1,19 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:maths_edu/constants.dart';
 import 'package:maths_edu/main/home/api.dart';
 import 'package:maths_edu/main/home/bab/input_bab_page.dart';
 import 'package:maths_edu/main/home/bab/update_bab_page.dart';
 import 'package:maths_edu/main/home/subBab/subBab_list_page.dart';
+import 'package:maths_edu/services/auth.dart';
 
 class BabList extends StatefulWidget {
+  String adminUID;
   String kelasId;
-  BabList(this.kelasId, {Key? key}) : super(key: key) {
+  BabList(this.adminUID, this.kelasId, {Key? key}) : super(key: key) {
+    _adminUID = adminUID;
     _kelasId = kelasId;
   }
 
@@ -17,10 +21,13 @@ class BabList extends StatefulWidget {
   State<BabList> createState() => _BabListState();
 }
 
+late String _adminUID;
 late String _kelasId;
 late DocumentReference _documentReference;
 
 class _BabListState extends State<BabList> {
+  final User? user = Auth().currentUser;
+
   bool admin = true;
 
   @override
@@ -52,7 +59,7 @@ class _BabListState extends State<BabList> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  SubBabList(_kelasId, listItems)),
+                                  SubBabList(_adminUID, _kelasId, listItems)),
                         );
                       },
                       child: ListTile(
@@ -73,44 +80,46 @@ class _BabListState extends State<BabList> {
                             fontSize: 20,
                           ),
                         ),
-                        trailing: Wrap(
-                          spacing: 12,
-                          children: <Widget>[
-                            Container(
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.create,
-                                  color: Colors.black,
-                                ),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            UpdateBab(_kelasId, listItems)),
-                                  );
-                                },
-                              ),
-                            ),
-                            Container(
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.delete,
-                                  color: Colors.black,
-                                ),
-                                onPressed: () async {
-                                  _documentReference = FirebaseFirestore
-                                      .instance
-                                      .collection(_kelasId)
-                                      .doc(listItems['id']);
-                                  ApiServices services = ApiServices();
-                                  services
-                                      .deleteDataToFirebase(_documentReference);
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
+                        trailing: _adminUID == '${user?.uid}'
+                            ? Wrap(
+                                spacing: 12,
+                                children: <Widget>[
+                                  Container(
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.create,
+                                        color: Colors.black,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => UpdateBab(
+                                                  _kelasId, listItems)),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  Container(
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.delete,
+                                        color: Colors.black,
+                                      ),
+                                      onPressed: () async {
+                                        _documentReference = FirebaseFirestore
+                                            .instance
+                                            .collection(_kelasId)
+                                            .doc(listItems['id']);
+                                        ApiServices services = ApiServices();
+                                        services.deleteDataToFirebase(
+                                            _documentReference);
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : null,
                       ),
                     );
                   });

@@ -12,8 +12,9 @@ import 'package:maths_edu/main/home/test/update_question_page.dart';
 import 'package:maths_edu/services/auth.dart';
 
 class TestList extends StatefulWidget {
-  TestList(this.kelasId, this.babIdData, this.testID, {Key? key})
+  TestList(this.adminUID, this.kelasId, this.babIdData, this.testID, {Key? key})
       : super(key: key) {
+    _adminUID = adminUID;
     _kelasId = kelasId;
     _babIdData = babIdData;
     _testID = testID;
@@ -27,6 +28,8 @@ class TestList extends StatefulWidget {
     _streamMateri =
         _referenceTestList.orderBy('timePost', descending: false).snapshots();
   }
+
+  String adminUID;
   String kelasId;
   Map babIdData;
   Map testID;
@@ -36,6 +39,7 @@ class TestList extends StatefulWidget {
   State<TestList> createState() => _TestListState();
 }
 
+late String _adminUID;
 late String _kelasId;
 late Map _babIdData;
 late Map _testID;
@@ -47,6 +51,7 @@ late CollectionReference _referenceTestList;
 late Stream<QuerySnapshot> _streamMateri;
 
 class _TestListState extends State<TestList> {
+  final User? user = Auth().currentUser;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,26 +63,28 @@ class _TestListState extends State<TestList> {
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return SubBabList(_kelasId, _babIdData);
+                  return SubBabList(_adminUID, _kelasId, _babIdData);
                 },
               ),
             );
           },
         ),
         title: Text('TEST'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) =>
-                      InputQuestion(_kelasId, _babIdData, _testID),
+        actions: _adminUID == '${user?.uid}'
+            ? [
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => InputQuestion(
+                            _adminUID, _kelasId, _babIdData, _testID),
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.add),
                 ),
-              );
-            },
-            icon: Icon(Icons.add),
-          ),
-        ],
+              ]
+            : null,
       ),
       body: testList(),
       floatingActionButton: checkScore(),
@@ -114,6 +121,7 @@ class _TestListState extends State<TestList> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => QuestionPage(
+                              _adminUID,
                               _kelasId,
                               x['name'],
                               x['question'],
@@ -129,63 +137,71 @@ class _TestListState extends State<TestList> {
                           ),
                         );
                       },
-                      child: ListTile(
-                        leading: SizedBox(
-                          width: 0,
-                        ),
-                        title: Align(
-                          alignment: Alignment(-1.5, 0),
-                          child: Text(
-                            x['name'],
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.none,
-                              color: Colors.black,
-                              fontSize: 20,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: ListTile(
+                          leading: SizedBox(
+                            width: 0,
+                          ),
+                          title: Align(
+                            alignment: Alignment(-1.5, 0),
+                            child: Text(
+                              x['name'],
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.none,
+                                color: Colors.black,
+                                fontSize: 20,
+                              ),
                             ),
                           ),
-                        ),
-                        trailing: Wrap(
-                          spacing: 12,
-                          children: <Widget>[
-                            Container(
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.create,
-                                  color: Colors.black,
-                                ),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => UpdateQuestion(
-                                            _kelasId,
-                                            _babIdData,
-                                            _testID,
-                                            listItems)),
-                                  );
-                                },
-                              ),
-                            ),
-                            Container(
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.delete,
-                                  color: Colors.black,
-                                ),
-                                onPressed: () async {
-                                  DocumentReference _documentReferenceTestList =
-                                      _documentReferenceTest
-                                          .collection('testList')
-                                          .doc(listItems['id']);
+                          trailing: _adminUID == '${user?.uid}'
+                              ? Wrap(
+                                  spacing: 12,
+                                  children: <Widget>[
+                                    Container(
+                                      child: IconButton(
+                                        icon: const Icon(
+                                          Icons.create,
+                                          color: Colors.black,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    UpdateQuestion(
+                                                        _adminUID,
+                                                        _kelasId,
+                                                        _babIdData,
+                                                        _testID,
+                                                        listItems)),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    Container(
+                                      child: IconButton(
+                                        icon: const Icon(
+                                          Icons.delete,
+                                          color: Colors.black,
+                                        ),
+                                        onPressed: () async {
+                                          DocumentReference
+                                              _documentReferenceTestList =
+                                              _documentReferenceTest
+                                                  .collection('testList')
+                                                  .doc(listItems['id']);
 
-                                  ApiServices services = ApiServices();
-                                  services.deleteQuestion(
-                                      _documentReferenceTestList);
-                                },
-                              ),
-                            ),
-                          ],
+                                          ApiServices services = ApiServices();
+                                          services.deleteQuestion(
+                                              _documentReferenceTestList);
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : null,
                         ),
                       ),
                     );
