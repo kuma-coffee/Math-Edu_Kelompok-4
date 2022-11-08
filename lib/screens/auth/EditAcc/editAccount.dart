@@ -215,13 +215,7 @@ class _editAccState extends State<editAcc> {
                 margin: EdgeInsets.symmetric(vertical: 10),
                 width: size.width * 0.8,
                 child: ElevatedButton(
-                  onPressed: () {
-                    updateUsername;
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => profilePage()),
-                    );
-                  },
+                  onPressed: updateUsername,
                   child: Text(
                     'SAVE',
                     style: TextStyle(color: Colors.white),
@@ -271,6 +265,11 @@ class _editAccState extends State<editAcc> {
               })));
 
       Utils.showSnackBar('Updates Success', Colors.green);
+      updateUsername;
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => profilePage()),
+      );
     } else {
       Utils.showSnackBar('No Updates', Colors.red);
       print('No Username Updates');
