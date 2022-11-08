@@ -15,7 +15,7 @@ class InputSubBab extends StatelessWidget {
     _referenceSubBab = _documentReference.collection('subBab');
   }
 
-  String adminUID;
+  List adminUID;
   String kelasId;
   Map data;
   late DocumentReference _documentReference;

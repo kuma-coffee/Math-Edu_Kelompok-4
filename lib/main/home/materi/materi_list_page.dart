@@ -27,7 +27,7 @@ class MateriList extends StatefulWidget {
         _referenceMateri.orderBy('timePost', descending: false).snapshots();
   }
 
-  String adminUID;
+  List adminUID;
   String kelasId;
   Map babIdData;
   Map subBabIdData;
@@ -35,7 +35,7 @@ class MateriList extends StatefulWidget {
   State<MateriList> createState() => _MateriListState();
 }
 
-late String _adminUID;
+late List _adminUID;
 late String _kelasId;
 late Map _babIdData;
 late Map _subBabIdData;
@@ -65,7 +65,7 @@ class _MateriListState extends State<MateriList> {
           },
         ),
         title: Text('MATERI'),
-        actions: _adminUID == '${user?.uid}'
+        actions: _adminUID.contains('${user?.uid}')
             ? [
                 IconButton(
                   onPressed: () {
@@ -128,7 +128,7 @@ class _MateriListState extends State<MateriList> {
                               ),
                             ),
                           ),
-                          trailing: _adminUID == '${user?.uid}'
+                          trailing: _adminUID.contains('${user?.uid}')
                               ? Wrap(
                                   spacing: 12,
                                   children: <Widget>[

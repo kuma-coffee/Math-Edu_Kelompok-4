@@ -20,7 +20,7 @@ class UpdateMateri extends StatelessWidget {
     _documentReferenceMateri =
         _documentReferenceSubBab.collection('materi').doc(materiIdData['id']);
   }
-  String adminUID;
+  List adminUID;
   String kelasId;
   Map babIdData;
   Map subBabIdData;

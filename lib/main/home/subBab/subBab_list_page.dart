@@ -28,14 +28,14 @@ class SubBabList extends StatefulWidget {
 
     _babIdData = babIdData;
   }
-  String adminUID;
+  List adminUID;
   String kelasId;
   Map babIdData;
   @override
   State<SubBabList> createState() => _SubBabListState();
 }
 
-late String _adminUID;
+late List _adminUID;
 late String _kelasId;
 late DocumentReference _documentReferenceBab;
 late DocumentReference _documentReferenceSubBab;
@@ -89,7 +89,7 @@ class _SubBabListState extends State<SubBabList> {
           },
         ),
         title: Text('SUB BAB'),
-        actions: _adminUID == '${user?.uid}'
+        actions: _adminUID.contains('${user?.uid}')
             ? [
                 IconButton(
                   onPressed: () {
@@ -181,7 +181,7 @@ class _SubBabListState extends State<SubBabList> {
                         fontSize: 20,
                       ),
                     ),
-                    trailing: _adminUID == '${user?.uid}'
+                    trailing: _adminUID.contains('${user?.uid}')
                         ? Wrap(
                             spacing: 12,
                             children: <Widget>[
@@ -293,7 +293,7 @@ class _SubBabListState extends State<SubBabList> {
                         fontSize: 20,
                       ),
                     ),
-                    trailing: _adminUID == '${user?.uid}'
+                    trailing: _adminUID.contains('${user?.uid}')
                         ? Wrap(
                             spacing: 12,
                             children: <Widget>[

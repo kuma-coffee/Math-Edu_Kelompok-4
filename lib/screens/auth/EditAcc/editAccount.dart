@@ -215,7 +215,13 @@ class _editAccState extends State<editAcc> {
                 margin: EdgeInsets.symmetric(vertical: 10),
                 width: size.width * 0.8,
                 child: ElevatedButton(
-                  onPressed: updateUsername,
+                  onPressed: () {
+                    updateUsername;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => profilePage()),
+                    );
+                  },
                   child: Text(
                     'SAVE',
                     style: TextStyle(color: Colors.white),

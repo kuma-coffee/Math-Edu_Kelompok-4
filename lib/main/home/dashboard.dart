@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +19,10 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   final User? user = Auth().currentUser;
-  String adminUID = 'Si943Tqb6ePUaIQVrasOeH7vV6i1';
+  List adminUID = [
+    'Si943Tqb6ePUaIQVrasOeH7vV6i1',
+    'eP4cvriseCbf2ZyB2Z9bM4uegEC3'
+  ];
 
   List<Tab> myTab = [
     Tab(
@@ -85,7 +90,7 @@ class _DashboardState extends State<Dashboard> {
                 ),
                 // ListTile(
                 //   leading: Icon(Icons.download),
-                //   title: Text('Download'),
+                //   title: Text(coba.contains('${user?.uid}').toString()),
                 //   onTap: () {
                 //     Navigator.push(
                 //       context,

@@ -29,7 +29,7 @@ class TestList extends StatefulWidget {
         _referenceTestList.orderBy('timePost', descending: false).snapshots();
   }
 
-  String adminUID;
+  List adminUID;
   String kelasId;
   Map babIdData;
   Map testID;
@@ -39,7 +39,7 @@ class TestList extends StatefulWidget {
   State<TestList> createState() => _TestListState();
 }
 
-late String _adminUID;
+late List _adminUID;
 late String _kelasId;
 late Map _babIdData;
 late Map _testID;
@@ -70,7 +70,7 @@ class _TestListState extends State<TestList> {
           },
         ),
         title: Text('TEST'),
-        actions: _adminUID == '${user?.uid}'
+        actions: _adminUID.contains('${user?.uid}')
             ? [
                 IconButton(
                   onPressed: () {
@@ -155,7 +155,7 @@ class _TestListState extends State<TestList> {
                               ),
                             ),
                           ),
-                          trailing: _adminUID == '${user?.uid}'
+                          trailing: _adminUID.contains('${user?.uid}')
                               ? Wrap(
                                   spacing: 12,
                                   children: <Widget>[

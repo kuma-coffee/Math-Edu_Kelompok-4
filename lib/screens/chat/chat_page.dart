@@ -120,11 +120,6 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-          bottom: Radius.circular(16),
-          top: Radius.circular(16),
-        )),
         leading: BackButton(
           color: Colors.white,
         ),

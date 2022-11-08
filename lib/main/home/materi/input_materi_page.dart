@@ -23,7 +23,7 @@ class InputMateri extends StatelessWidget {
     _referenceMateri = _documentReferenceSubBab.collection('materi');
   }
 
-  String adminUID;
+  List adminUID;
   String kelasId;
   Map babIdData;
   Map subBabIdData;

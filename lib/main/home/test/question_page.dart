@@ -24,6 +24,7 @@ class QuestionPage extends StatefulWidget {
       this.questionID,
       {Key? key})
       : super(key: key) {
+    _adminUID = adminUID;
     _kelasId = kelasId;
     _name = name;
     _question = question;
@@ -37,7 +38,7 @@ class QuestionPage extends StatefulWidget {
     _questionID = questionID;
 
     _documentReferenceBab =
-        FirebaseFirestore.instance.collection('bab').doc(babIdData['id']);
+        FirebaseFirestore.instance.collection(kelasId).doc(babIdData['id']);
     _documentReferenceTest =
         _documentReferenceBab.collection('test').doc(testID['id']);
     _questionRef =
@@ -48,7 +49,7 @@ class QuestionPage extends StatefulWidget {
     _streamQuestionAnswered = _questionAnsweredRef.snapshots();
   }
 
-  String adminUID;
+  List adminUID;
   String kelasId;
   var name;
   var question;
@@ -66,7 +67,7 @@ class QuestionPage extends StatefulWidget {
   State<QuestionPage> createState() => _QuestionPageState();
 }
 
-late String _adminUID;
+late List _adminUID;
 late String _kelasId;
 late String _name;
 late String _question;
@@ -356,10 +357,6 @@ class _QuestionPageState extends State<QuestionPage> {
                                     width: size.width * 0.35,
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        CollectionReference
-                                            _referenceQuestionAnswered =
-                                            _documentReferenceTest.collection(
-                                                'QuestionAnswered.${user?.uid}');
                                         ApiServices services = ApiServices();
                                         if (checkA == true) {
                                           services.updateQuestionAnswered(
@@ -407,9 +404,8 @@ class _QuestionPageState extends State<QuestionPage> {
                                               x['answerE'],
                                               x['answer']);
                                         } else {
-                                          return Utils.showSnackBar(
-                                              'You have not answered the question',
-                                              Colors.red);
+                                          return print(
+                                              'You have not answered the question');
                                         }
                                         Navigator.push(
                                           context,
@@ -445,271 +441,8 @@ class _QuestionPageState extends State<QuestionPage> {
                     ),
                   );
                 }
-
-                return Scaffold(
-                  extendBodyBehindAppBar: true,
-                  appBar: AppBar(
-                    title: Text(_name.toString()),
-                    leading: BackButton(
-                      color: Colors.white,
-                    ),
-                    elevation: 0,
-                  ),
-                  body: Container(
-                    height: size.height,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image:
-                            AssetImage("assets/images/fourth-background.png"),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    alignment: Alignment.center,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Text(
-                            'MATH EDU',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 36,
-                            ),
-                          ),
-                          SizedBox(
-                            height: size.height * 0.05,
-                          ),
-                          Column(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 25),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      height: 140,
-                                      child: Text(
-                                        '1.',
-                                        style: TextStyle(fontSize: 18),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: size.width * 0.04,
-                                    ),
-                                    Text(
-                                      _question.toString(),
-                                      style: TextStyle(fontSize: 18),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 25),
-                                child: ListTile(
-                                  leading: checkA
-                                      ? IconButton(
-                                          icon: const Icon(
-                                            Icons.circle_rounded,
-                                            color: Colors.green,
-                                          ),
-                                          onPressed: () {},
-                                        )
-                                      : IconButton(
-                                          icon: const Icon(
-                                            Icons.circle_outlined,
-                                            color: Colors.black,
-                                          ),
-                                          onPressed: () => changeAnswerToA(),
-                                        ),
-                                  title: Text(_answerA.toString()),
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 25),
-                                child: ListTile(
-                                  leading: checkB
-                                      ? IconButton(
-                                          icon: const Icon(
-                                            Icons.circle_rounded,
-                                            color: Colors.green,
-                                          ),
-                                          onPressed: () {},
-                                        )
-                                      : IconButton(
-                                          icon: const Icon(
-                                            Icons.circle_outlined,
-                                            color: Colors.black,
-                                          ),
-                                          onPressed: () => changeAnswerToB(),
-                                        ),
-                                  title: Text(_answerB.toString()),
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 25),
-                                child: ListTile(
-                                  leading: checkC
-                                      ? IconButton(
-                                          icon: const Icon(
-                                            Icons.circle_rounded,
-                                            color: Colors.green,
-                                          ),
-                                          onPressed: () {},
-                                        )
-                                      : IconButton(
-                                          icon: const Icon(
-                                            Icons.circle_outlined,
-                                            color: Colors.black,
-                                          ),
-                                          onPressed: () => changeAnswerToC(),
-                                        ),
-                                  title: Text(_answerC.toString()),
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 25),
-                                child: ListTile(
-                                  leading: checkD
-                                      ? IconButton(
-                                          icon: const Icon(
-                                            Icons.circle_rounded,
-                                            color: Colors.green,
-                                          ),
-                                          onPressed: () {},
-                                        )
-                                      : IconButton(
-                                          icon: const Icon(
-                                            Icons.circle_outlined,
-                                            color: Colors.black,
-                                          ),
-                                          onPressed: () => changeAnswerToD(),
-                                        ),
-                                  title: Text(_answerD.toString()),
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 25),
-                                child: ListTile(
-                                  leading: checkE
-                                      ? IconButton(
-                                          icon: const Icon(
-                                            Icons.circle_rounded,
-                                            color: Colors.green,
-                                          ),
-                                          onPressed: () {},
-                                        )
-                                      : IconButton(
-                                          icon: const Icon(
-                                            Icons.circle_outlined,
-                                            color: Colors.black,
-                                          ),
-                                          onPressed: () => changeAnswerToE(),
-                                        ),
-                                  title: Text(_answerE.toString()),
-                                ),
-                              ),
-                              SizedBox(
-                                height: size.height * 0.05,
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 50),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                //Submit Password
-                                Container(
-                                  margin: EdgeInsets.symmetric(vertical: 10),
-                                  width: size.width * 0.35,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      CollectionReference
-                                          _referenceQuestionAnswered =
-                                          _documentReferenceTest.collection(
-                                              'QuestionAnswered.${user?.uid}');
-                                      ApiServices services = ApiServices();
-                                      if (checkA == true) {
-                                        services.updateQuestionAnswered(
-                                            _questionRef,
-                                            _questionAnsweredRef,
-                                            '${user?.uid}',
-                                            x['id'],
-                                            x['score'],
-                                            x['answerA'],
-                                            x['answer']);
-                                      } else if (checkB == true) {
-                                        services.updateQuestionAnswered(
-                                            _questionRef,
-                                            _questionAnsweredRef,
-                                            '${user?.uid}',
-                                            x['id'],
-                                            x['score'],
-                                            x['answerB'],
-                                            x['answer']);
-                                      } else if (checkC == true) {
-                                        services.updateQuestionAnswered(
-                                            _questionRef,
-                                            _questionAnsweredRef,
-                                            '${user?.uid}',
-                                            x['id'],
-                                            x['score'],
-                                            x['answerC'],
-                                            x['answer']);
-                                      } else if (checkD == true) {
-                                        services.updateQuestionAnswered(
-                                            _questionRef,
-                                            _questionAnsweredRef,
-                                            '${user?.uid}',
-                                            x['id'],
-                                            x['score'],
-                                            x['answerD'],
-                                            x['answer']);
-                                      } else if (checkE == true) {
-                                        services.updateQuestionAnswered(
-                                            _questionRef,
-                                            _questionAnsweredRef,
-                                            '${user?.uid}',
-                                            x['id'],
-                                            x['score'],
-                                            x['answerE'],
-                                            x['answer']);
-                                      } else {
-                                        return Utils.showSnackBar(
-                                            'You have not answered the question',
-                                            Colors.red);
-                                      }
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => TestList(
-                                                _adminUID,
-                                                _kelasId,
-                                                _babIdData,
-                                                _testID)),
-                                      );
-                                    },
-                                    child: Text(
-                                      'SUBMIT',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 20, horizontal: 40),
-                                      backgroundColor: kPrimaryColor,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                return Center(
+                  child: CircularProgressIndicator(),
                 );
               },
             );

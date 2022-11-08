@@ -10,7 +10,7 @@ import 'package:maths_edu/main/home/subBab/subBab_list_page.dart';
 import 'package:maths_edu/services/auth.dart';
 
 class BabList extends StatefulWidget {
-  String adminUID;
+  List adminUID;
   String kelasId;
   BabList(this.adminUID, this.kelasId, {Key? key}) : super(key: key) {
     _adminUID = adminUID;
@@ -21,14 +21,12 @@ class BabList extends StatefulWidget {
   State<BabList> createState() => _BabListState();
 }
 
-late String _adminUID;
+late List _adminUID;
 late String _kelasId;
 late DocumentReference _documentReference;
 
 class _BabListState extends State<BabList> {
   final User? user = Auth().currentUser;
-
-  bool admin = true;
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +78,7 @@ class _BabListState extends State<BabList> {
                             fontSize: 20,
                           ),
                         ),
-                        trailing: _adminUID == '${user?.uid}'
+                        trailing: _adminUID.contains('${user?.uid}')
                             ? Wrap(
                                 spacing: 12,
                                 children: <Widget>[
@@ -128,7 +126,7 @@ class _BabListState extends State<BabList> {
               child: CircularProgressIndicator(),
             );
           }),
-      floatingActionButton: admin
+      floatingActionButton: _adminUID.contains('${user?.uid}')
           ? FloatingActionButton(
               child: Icon(Icons.add),
               onPressed: () {

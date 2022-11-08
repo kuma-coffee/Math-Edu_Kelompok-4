@@ -29,7 +29,7 @@ class UpdateQuestion extends StatelessWidget {
     _documentReferenceTestList =
         _documentReferenceSubBab.collection('testList').doc(testListID['id']);
   }
-  String adminUID;
+  List adminUID;
   String kelasId;
   Map babIdData;
   Map testID;

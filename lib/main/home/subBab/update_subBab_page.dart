@@ -22,7 +22,7 @@ class UpdateSubBab extends StatelessWidget {
   late DocumentReference _documentReferenceBab;
   late DocumentReference _documentReferenceSubBab;
   String url = '';
-  String adminUID;
+  List adminUID;
 
   @override
   Widget build(BuildContext context) {

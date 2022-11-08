@@ -25,7 +25,7 @@ class InputQuestion extends StatelessWidget {
         _documentReferenceBab.collection('test').doc(testID['id']);
     _referenceTestList = _documentReferenceSubBab.collection('testList');
   }
-  String adminUID;
+  List adminUID;
   String kelasId;
   Map babIdData;
   Map testID;
