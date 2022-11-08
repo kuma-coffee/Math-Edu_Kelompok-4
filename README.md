@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/kuma-coffee/Math-Edu_Kelompok-4/blob/main/assets/images/launch_image.png"/>
+  <img src="https://github.com/kuma-coffee/Math-Edu_Kelompok-4/blob/main/assets/images/logo.jpeg"/>
 </p>
 
 # Math Edu for Junior High School
