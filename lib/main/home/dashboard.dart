@@ -21,7 +21,9 @@ class _DashboardState extends State<Dashboard> {
   final User? user = Auth().currentUser;
   List adminUID = [
     'Si943Tqb6ePUaIQVrasOeH7vV6i1',
-    'eP4cvriseCbf2ZyB2Z9bM4uegEC3'
+    'eP4cvriseCbf2ZyB2Z9bM4uegEC3',
+    'NNQANaXG3JQ201z5O6AJPM6bt8g1',
+    'PoLoIZ9I7La2vSpUqM8UDWRFvmp2',
   ];
 
   List<Tab> myTab = [
