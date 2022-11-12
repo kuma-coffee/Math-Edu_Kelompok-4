@@ -233,7 +233,7 @@ class _QuestionPageState extends State<QuestionPage> {
                                           _question.toString(),
                                           style: TextStyle(fontSize: 18),
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
                                 ),
