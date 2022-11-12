@@ -228,9 +228,11 @@ class _QuestionPageState extends State<QuestionPage> {
                                       SizedBox(
                                         width: size.width * 0.04,
                                       ),
-                                      Text(
-                                        _question.toString(),
-                                        style: TextStyle(fontSize: 18),
+                                      Flexible(
+                                        child: Text(
+                                          _question.toString(),
+                                          style: TextStyle(fontSize: 18),
+                                        ),
                                       ),
                                     ],
                                   ),
