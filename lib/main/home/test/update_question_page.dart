@@ -45,7 +45,7 @@ class UpdateQuestion extends StatelessWidget {
     var size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Input Pertanyaan'),
+        title: Text('Update Pertanyaan'),
       ),
       body: Center(
         child: SingleChildScrollView(
